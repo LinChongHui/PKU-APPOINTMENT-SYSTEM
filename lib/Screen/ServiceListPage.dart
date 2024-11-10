@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:appointment_system2/Widgets/appbar_and_backarrow.dart';
+import 'package:appointment_system2/services/firebase_service.dart';
 
 class ServiceListPage extends StatefulWidget {
   const ServiceListPage({super.key});
@@ -10,45 +11,51 @@ class ServiceListPage extends StatefulWidget {
 
 class _ServiceListPageState extends State<ServiceListPage> {
   final TextEditingController _searchController = TextEditingController();
-  final List<String> services = [
-    'Service 1',
-    'Service 2',
-    'Service 3',
-    'Service 4'
-  ]; // List of service names
-  final Map<String, String> serviceDetails = {
-    'Service 1': 'Explanation for Service 1',
-    'Service 2': 'Explanation for Service 2',
-    'Service 3': 'Explanation for Service 3',
-    'Service 4': 'Explanation for Service 4',
-  }; // Explanations for each service
-
-  late List<String> filteredServices;
+  final FirebaseService firebaseService = FirebaseService();
+  List<Map<String, String>> services =
+      []; // List to hold services from Firestore
+  List<Map<String, String>> filteredServices = [];
 
   @override
   void initState() {
     super.initState();
-    filteredServices = services;
     _searchController.addListener(_filterServices);
+    _loadServices();
+  }
+
+  Future<void> _loadServices() async {
+    try {
+      List<Map<String, String>> fetchedServices =
+          await firebaseService.fetchServices();
+      setState(() {
+        services = fetchedServices;
+        filteredServices = services; // Initialize with the full list
+      });
+      print(services);
+    } catch (e) {
+      print('Error loading services: $e');
+      // You might also want to display an error message to the user
+    }
   }
 
   void _filterServices() {
     setState(() {
       filteredServices = services
-          .where((service) => service
+          .where((service) => service['name']!
               .toLowerCase()
               .contains(_searchController.text.toLowerCase()))
           .toList();
     });
   }
 
-  void _showDetails(BuildContext context, String serviceName) {
+  void _showDetails(
+      BuildContext context, String serviceName, String description) {
     showDialog(
       context: context,
       builder: (context) {
         return AlertDialog(
           title: Text(serviceName),
-          content: Text(serviceDetails[serviceName] ?? 'No details available'),
+          content: Text(description),
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(context),
@@ -71,7 +78,6 @@ class _ServiceListPageState extends State<ServiceListPage> {
         padding: const EdgeInsets.all(16.0),
         child: Column(
           children: [
-            // Search Field
             TextField(
               controller: _searchController,
               decoration: InputDecoration(
@@ -86,80 +92,81 @@ class _ServiceListPageState extends State<ServiceListPage> {
 
             // Service List
             Expanded(
-              child: ListView.builder(
-                itemCount: filteredServices.length,
-                itemBuilder: (context, index) {
-                  final serviceName = filteredServices[index];
-                  return Card(
-                    margin: const EdgeInsets.symmetric(vertical: 8.0),
-                    child: Padding(
-                      padding: const EdgeInsets.all(16.0),
-                      child: Row(
-                        children: [
-                          // Placeholder for Service Image
-                          Container(
-                            width: 50,
-                            height: 50,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(8.0),
-                              color: Colors.grey[300], // Placeholder color
-                            ),
-                            child: const Icon(Icons.medical_services,
-                                size: 30, color: Colors.grey),
-                          ),
-                          const SizedBox(width: 16),
+              child: filteredServices.isNotEmpty
+                  ? ListView.builder(
+                      itemCount: filteredServices.length,
+                      itemBuilder: (context, index) {
+                        final service = filteredServices[index];
+                        final serviceName = service['name']!;
+                        final serviceDescription = service['description']!;
 
-                          // Service Information
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
+                        return Card(
+                          margin: const EdgeInsets.symmetric(vertical: 8.0),
+                          child: Padding(
+                            padding: const EdgeInsets.all(16.0),
+                            child: Row(
                               children: [
-                                Text(
-                                  serviceName,
-                                  style: const TextStyle(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.bold,
+                                Container(
+                                  width: 50,
+                                  height: 50,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(8.0),
+                                    color: Colors.grey[300],
+                                  ),
+                                  child: const Icon(Icons.medical_services,
+                                      size: 30, color: Colors.grey),
+                                ),
+                                const SizedBox(width: 16),
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        serviceName,
+                                        style: const TextStyle(
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                      const SizedBox(height: 4),
+                                      Text(
+                                        serviceDescription,
+                                        style: const TextStyle(
+                                          fontSize: 14,
+                                          color: Colors.grey,
+                                        ),
+                                      ),
+                                    ],
                                   ),
                                 ),
-                                const SizedBox(height: 4),
-                                Text(
-                                  serviceDetails[serviceName] ??
-                                      'No details available',
-                                  style: const TextStyle(
-                                    fontSize: 14,
-                                    color: Colors.grey,
-                                  ),
+                                Column(
+                                  children: [
+                                    TextButton(
+                                      onPressed: () => _showDetails(context,
+                                          serviceName, serviceDescription),
+                                      child: const Text('Details'),
+                                    ),
+                                    ElevatedButton(
+                                      style: ElevatedButton.styleFrom(
+                                        backgroundColor: Colors.teal,
+                                      ),
+                                      onPressed: () {
+                                        Navigator.pop(context, serviceName);
+                                      },
+                                      child: const Text('Select'),
+                                    ),
+                                  ],
                                 ),
                               ],
                             ),
                           ),
-
-                          // Action Buttons
-                          Column(
-                            children: [
-                              TextButton(
-                                onPressed: () =>
-                                    _showDetails(context, serviceName),
-                                child: const Text('Details'),
-                              ),
-                              ElevatedButton(
-                                style: ElevatedButton.styleFrom(
-                                  backgroundColor: Colors.teal,
-                                ),
-                                onPressed: () {
-                                  // Return the selected service name to the previous page
-                                  Navigator.pop(context, serviceName);
-                                },
-                                child: const Text('Select'),
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                    ),
-                  );
-                },
-              ),
+                        );
+                      },
+                    )
+                  : const Center(
+                      child:
+                          CircularProgressIndicator()), // Show loading indicator
             ),
           ],
         ),
