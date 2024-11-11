@@ -1,9 +1,10 @@
-import 'package:appointment_system2/Widgets/appbar_and_backarrow.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:appointment_system2/services/appointment_firebase_service.dart';
+import 'package:appointment_system2/widgets/appbar_and_backarrow.dart';
 
 class AvailableDatesPage extends StatefulWidget {
-  const AvailableDatesPage({super.key});
+  const AvailableDatesPage({Key? key}) : super(key: key);
 
   @override
   _AvailableDatesPageState createState() => _AvailableDatesPageState();
@@ -12,29 +13,35 @@ class AvailableDatesPage extends StatefulWidget {
 class _AvailableDatesPageState extends State<AvailableDatesPage> {
   DateTime? _selectedDate;
   String? _selectedTime;
-  final List<String> _availableTimeSlots = [
-    '8:00 - 9:00',
-    '9:00 - 10:00',
-    '10:00 - 11:00',
-    '11:00 - 12:00',
-    '12:00 - 1:00',
-    '2:00 - 3:00',
-    '3:00 - 4:00',
-    '4:00 - 5:00',
-  ];
+  List<String> _timeSlots = [];
+  final AppointmentFirebaseService _appointmentService =
+      AppointmentFirebaseService();
 
   Future<void> _selectDate(BuildContext context) async {
     final DateTime? pickedDate = await showDatePicker(
       context: context,
       initialDate: DateTime.now(),
-      firstDate: DateTime(2023),
+      firstDate: DateTime.now(), // Prevent selecting past dates
       lastDate: DateTime(2025),
     );
-    if (pickedDate != null && pickedDate != _selectedDate) {
+    if (pickedDate != null) {
       setState(() {
         _selectedDate = pickedDate;
         _selectedTime = null; // Reset the time slot when date changes
+        _fetchTimeSlots(pickedDate);
       });
+    }
+  }
+
+  Future<void> _fetchTimeSlots(DateTime date) async {
+    try {
+      _timeSlots = await _appointmentService.getTimeSlots(date);
+      setState(() {});
+    } catch (e) {
+      print('Error fetching time slots: $e');
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Failed to fetch time slots.')),
+      );
     }
   }
 
@@ -81,34 +88,37 @@ class _AvailableDatesPageState extends State<AvailableDatesPage> {
             ),
             const SizedBox(height: 20),
 
-            // Available Time Slots
+            // Time Slots
             if (_selectedDate != null) ...[
               const Text(
                 'Available Time Slots',
                 style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: 10),
-              Wrap(
-                spacing: 10,
-                runSpacing: 10,
-                children: _availableTimeSlots.map((time) {
-                  return ChoiceChip(
-                    label: Text(time),
-                    selected: _selectedTime == time,
-                    onSelected: (bool selected) {
-                      setState(() {
-                        _selectedTime = selected ? time : null;
-                      });
-                    },
-                    selectedColor: Colors.teal,
-                    backgroundColor: Colors.grey[200],
-                    labelStyle: TextStyle(
-                      color:
-                          _selectedTime == time ? Colors.white : Colors.black,
+              _timeSlots.isEmpty
+                  ? const Text('No time slots available for this date.')
+                  : Wrap(
+                      spacing: 10,
+                      runSpacing: 10,
+                      children: _timeSlots.map((time) {
+                        return ChoiceChip(
+                          label: Text(time),
+                          selected: _selectedTime == time,
+                          onSelected: (bool selected) {
+                            setState(() {
+                              _selectedTime = selected ? time : null;
+                            });
+                          },
+                          selectedColor: Colors.teal,
+                          backgroundColor: Colors.grey[200],
+                          labelStyle: TextStyle(
+                            color: _selectedTime == time
+                                ? Colors.white
+                                : Colors.black,
+                          ),
+                        );
+                      }).toList(),
                     ),
-                  );
-                }).toList(),
-              ),
               const SizedBox(height: 20),
             ],
 
