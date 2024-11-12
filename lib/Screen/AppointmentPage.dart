@@ -2,6 +2,7 @@ import 'package:appointment_system2/Widgets/appbar_and_backarrow.dart';
 import 'package:appointment_system2/Widgets/custom_button.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:appointment_system2/services/firebase_Appointmentpage.dart';
 
 class AppointmentPage extends StatefulWidget {
   const AppointmentPage({super.key});
@@ -14,6 +15,8 @@ class _AppointmentPageState extends State<AppointmentPage> {
   String? selectedService;
   String? selectedDate;
   String? selectedTime;
+  final TextEditingController _commentController = TextEditingController();
+  final FirebaseService _firebaseService = FirebaseService();
 
   @override
   Widget build(BuildContext context) {
@@ -27,7 +30,6 @@ class _AppointmentPageState extends State<AppointmentPage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            // Select a Service Button with Forward Arrow
             CustomButton(
               text: selectedService ?? 'Select a Service',
               onTap: () async {
@@ -41,8 +43,6 @@ class _AppointmentPageState extends State<AppointmentPage> {
               },
             ),
             const SizedBox(height: 16),
-
-            // Available Dates Button with Forward Arrow
             CustomButton(
               text: selectedDate != null && selectedTime != null
                   ? '$selectedDate, $selectedTime'
@@ -60,17 +60,14 @@ class _AppointmentPageState extends State<AppointmentPage> {
               },
             ),
             const SizedBox(height: 16),
-
-            // Comment Text Field
-            const TextField(
-              decoration: InputDecoration(
+            TextField(
+              controller: _commentController,
+              decoration: const InputDecoration(
                 labelText: 'Comment',
                 border: OutlineInputBorder(),
               ),
               maxLines: 4,
             ),
-
-            // Submit Button
             const SizedBox(height: 16),
             ElevatedButton(
               style: ElevatedButton.styleFrom(
@@ -78,8 +75,35 @@ class _AppointmentPageState extends State<AppointmentPage> {
                 padding: const EdgeInsets.symmetric(vertical: 16),
                 textStyle: const TextStyle(fontSize: 18),
               ),
-              onPressed: () {
-                // Handle submit action here, like saving data or performing an action
+              onPressed: () async {
+                if (selectedService != null &&
+                    selectedDate != null &&
+                    selectedTime != null &&
+                    _commentController.text.isNotEmpty) {
+                  print(
+                      "Service: $selectedService, Date: $selectedDate, Time: $selectedTime, Comment: ${_commentController.text}"); // Debug print
+
+                  // Call the backend function to create the appointment
+                  await _firebaseService.createAppointment(
+                    selectedService!,
+                    selectedDate!,
+                    selectedTime!,
+                    _commentController.text,
+                  );
+
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                        content: Text("Appointment added successfully")),
+                  );
+
+                  // Navigate back to the homepage and clear the navigation stack
+                  Navigator.of(context)
+                      .pushNamedAndRemoveUntil('/homepage', (route) => false);
+                } else {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text("Please fill in all fields")),
+                  );
+                }
               },
               child: const Text('Submit'),
             ),
