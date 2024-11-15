@@ -21,6 +21,12 @@ class _HomePageState extends State<HomePage> {
       appBar: AppBar(
         backgroundColor: Colors.white,
         elevation: 0,
+        leading: IconButton(
+          icon: Icon(Icons.menu, color: Colors.black),
+          onPressed: () {
+            // Open drawer or other menu actions
+          },
+        ),
         title: Row(
           children: [
             Image.asset('assets/image/logo.png', height: 30), // Replace with your logo path
@@ -49,7 +55,7 @@ class _HomePageState extends State<HomePage> {
       ),
       body: Column(
         children: [
-          SizedBox(height: 20),
+          const SizedBox(height: 20),
           // Image Slider with PageView
           Container(
             height: 180,
@@ -80,10 +86,10 @@ class _HomePageState extends State<HomePage> {
               mainAxisSpacing: 16.0,
               crossAxisSpacing: 16.0,
               children: [
-                _buildGridItem(Icons.calendar_today, 'Book An Appointment'),
-                _buildGridItem(Icons.assignment, 'Appointment Record'),
-                _buildGridItem(Icons.location_on, 'Location Targeting'),
-                _buildGridItem(Icons.health_and_safety, 'Health Reports'),
+                _buildGridItem(Icons.calendar_today, 'Book An Appointment', BookAppointmentPage()),
+                _buildGridItem(Icons.assignment, 'Appointment Record', AppointmentRecordPage()),
+                _buildGridItem(Icons.location_on, 'Location Targeting', LocationTargetingPage()),
+                _buildGridItem(Icons.health_and_safety, 'Health Reports', HealthReportsPage()),
               ],
             ),
           ),
@@ -128,7 +134,6 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  // Build method for the indicator dots below the PageView
   Widget _buildIndicator(bool isActive) {
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 4.0),
@@ -141,10 +146,13 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  Widget _buildGridItem(IconData icon, String title) {
+  Widget _buildGridItem(IconData icon, String title, Widget page) {
     return GestureDetector(
       onTap: () {
-        // Handle button tap
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => page),
+        );
       },
       child: Card(
         elevation: 4,
@@ -168,16 +176,53 @@ class _HomePageState extends State<HomePage> {
   }
 }
 
+// Placeholder pages for each of the navigation targets
+class BookAppointmentPage extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: const Text('Book An Appointment')),
+      body: const Center(child: Text('Book An Appointment Page')),
+    );
+  }
+}
+
+class AppointmentRecordPage extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: const Text('Appointment Record')),
+      body: const Center(child: Text('Appointment Record Page')),
+    );
+  }
+}
+
+class LocationTargetingPage extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: const Text('Location Targeting')),
+      body: const Center(child: Text('Location Targeting Page')),
+    );
+  }
+}
+
+class HealthReportsPage extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: const Text('Health Reports')),
+      body: const Center(child: Text('Health Reports Page')),
+    );
+  }
+}
+
 class ProfilePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Profile'),
-      ),
-      body: const Center(
-        child: Text('Profile Page'),
-      ),
+      appBar: AppBar(title: const Text('Profile')),
+      body: const Center(child: Text('Profile Page')),
     );
   }
 }
@@ -186,12 +231,8 @@ class SettingsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Settings'),
-      ),
-      body: const Center(
-        child: Text('Settings Page'),
-      ),
+      appBar: AppBar(title: const Text('Settings')),
+      body: const Center(child: Text('Settings Page')),
     );
   }
 }
