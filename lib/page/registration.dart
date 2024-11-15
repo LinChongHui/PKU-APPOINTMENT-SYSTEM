@@ -1,11 +1,9 @@
 // registration.dart
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:user_profile_management/auth_service.dart';
-import 'package:user_profile_management/page/home.dart';
-import 'package:user_profile_management/page/registration.dart';
 import 'package:user_profile_management/page/login.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 
 
 class RegistrationPage extends StatefulWidget {
@@ -228,7 +226,3 @@ class _RegistrationPageState extends State<RegistrationPage> {
     );
   }
 }
-
-
-
-which line define the  subcollection name? how to I change it to gmail ?
