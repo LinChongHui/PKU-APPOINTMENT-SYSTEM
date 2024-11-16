@@ -3,13 +3,13 @@ import 'package:user_profile_management/const/theme.dart';
 
 class HomePage extends StatefulWidget {
   @override
+  const HomePage({super.key});
   _HomePageState createState() => _HomePageState();
 }
 
 class _HomePageState extends State<HomePage> {
   int _currentPage = 0;
   final PageController _pageController = PageController();
-
   @override
   void dispose() {
     _pageController.dispose();
