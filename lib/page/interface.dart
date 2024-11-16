@@ -15,10 +15,7 @@ class InterfacePage extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             // Logo Image
-            Image.asset(
-              'assets/image/logo.png', // Make sure to use your actual image path
-              height: 150,
-            ),
+            Image.asset( 'assets/logo.png', height: 150,),
             const SizedBox(height: 20),
 
             // Title and Subtitle

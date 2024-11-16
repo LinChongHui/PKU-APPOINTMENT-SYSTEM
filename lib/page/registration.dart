@@ -55,7 +55,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               // Logo
-              Image.asset('assets/PKU.png', height: 80), // Make sure to replace with actual image path
+              Image.asset('assets/logo.png', height: 80), // Make sure to replace with actual image path
 
               const SizedBox(height: 16),
               const Text(
