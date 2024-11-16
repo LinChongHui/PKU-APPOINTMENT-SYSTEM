@@ -2,16 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:user_profile_management/const/theme.dart';
 
 class HomePage extends StatefulWidget {
-  const HomePage({super.key});
-
   @override
+  const HomePage({super.key});
   _HomePageState createState() => _HomePageState();
 }
 
 class _HomePageState extends State<HomePage> {
   int _currentPage = 0;
   final PageController _pageController = PageController();
-
   @override
   void dispose() {
     _pageController.dispose();
@@ -25,20 +23,20 @@ class _HomePageState extends State<HomePage> {
         backgroundColor: Colors.white,
         elevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.menu, color: Colors.black),
+          icon: Icon(Icons.menu, color: Colors.black),
           onPressed: () {
-            // Open drawer or handle menu actions
+            // Open drawer or other menu actions
           },
         ),
         title: Row(
           children: [
             Image.asset('assets/logo.png', height: 30), // Replace with your logo path
-            const SizedBox(width: 20),
+            const SizedBox(width: 25),
             const Text(
               'Pusat Kesihatan UTM',
               style: TextStyle(
                 color: Colors.black,
-                fontSize: 16,
+                fontSize: 15,
                 fontWeight: FontWeight.bold,
               ),
             ),
@@ -50,7 +48,7 @@ class _HomePageState extends State<HomePage> {
             onPressed: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => const ProfilePage()),
+                MaterialPageRoute(builder: (context) => ProfilePage()),
               );
             },
           ),
@@ -59,7 +57,7 @@ class _HomePageState extends State<HomePage> {
       body: Column(
         children: [
           const SizedBox(height: 20),
-          // Image Slider
+          // Image Slider with PageView
           Container(
             height: 180,
             child: PageView(
@@ -70,9 +68,9 @@ class _HomePageState extends State<HomePage> {
                 });
               },
               children: [
+                Image.asset('assets/home1.jpg', fit: BoxFit.cover), 
                 Image.asset('assets/home1.jpg', fit: BoxFit.cover),
-                Image.asset('assets/home2.jpg', fit: BoxFit.cover),
-                Image.asset('assets/home3.jpg', fit: BoxFit.cover),
+                Image.asset('assets/home1.jpg', fit: BoxFit.cover),
               ],
             ),
           ),
@@ -80,13 +78,8 @@ class _HomePageState extends State<HomePage> {
           // Page Indicator
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
-            children: List.generate(
-              3,
-              (index) => _buildIndicator(index == _currentPage),
-            ),
+            children: List.generate(3, (index) => _buildIndicator(index == _currentPage)),
           ),
-          const SizedBox(height: 20),
-          // Menu Grid
           Expanded(
             child: GridView.count(
               crossAxisCount: 2,
@@ -94,19 +87,16 @@ class _HomePageState extends State<HomePage> {
               mainAxisSpacing: 16.0,
               crossAxisSpacing: 16.0,
               children: [
-                _buildGridItem(Icons.calendar_today, 'Book An Appointment', const BookAppointmentPage()),
-                _buildGridItem(Icons.assignment, 'Appointment Record', const AppointmentRecordPage()),
-                _buildGridItem(Icons.location_on, 'Location Targeting', const LocationTargetingPage()),
-                _buildGridItem(Icons.health_and_safety, 'Health Reports', const HealthReportsPage()),
-                _buildGridItem(Icons.settings, 'Settings', const SettingsPage()),
-                _buildGridItem(Icons.logout, 'Logout', const LogoutPage()),
+                _buildGridItem(Icons.calendar_today, 'Book An Appointment', BookAppointmentPage()),
+                _buildGridItem(Icons.assignment, 'Appointment Record', AppointmentRecordPage()),
+                _buildGridItem(Icons.location_on, 'Location Targeting', LocationTargetingPage()),
+                _buildGridItem(Icons.health_and_safety, 'Health Reports', HealthReportsPage()),
               ],
             ),
           ),
         ],
       ),
       bottomNavigationBar: BottomNavigationBar(
-        currentIndex: 0, // Active tab
         items: const [
           BottomNavigationBarItem(
             icon: Icon(Icons.home),
@@ -127,17 +117,17 @@ class _HomePageState extends State<HomePage> {
           if (index == 0) {
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => const HomePage()),
+              MaterialPageRoute(builder: (context) => HomePage()),
             );
           } else if (index == 1) {
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => const ProfilePage()),
+              MaterialPageRoute(builder: (context) => ProfilePage()),
             );
           } else if (index == 2) {
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => const SettingsPage()),
+              MaterialPageRoute(builder: (context) => SettingsPage()),
             );
           }
         },
@@ -187,10 +177,8 @@ class _HomePageState extends State<HomePage> {
   }
 }
 
-// Placeholder pages
+// Placeholder pages for each of the navigation targets
 class BookAppointmentPage extends StatelessWidget {
-  const BookAppointmentPage({super.key});
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -201,8 +189,6 @@ class BookAppointmentPage extends StatelessWidget {
 }
 
 class AppointmentRecordPage extends StatelessWidget {
-  const AppointmentRecordPage({super.key});
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -213,8 +199,6 @@ class AppointmentRecordPage extends StatelessWidget {
 }
 
 class LocationTargetingPage extends StatelessWidget {
-  const LocationTargetingPage({super.key});
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -225,8 +209,6 @@ class LocationTargetingPage extends StatelessWidget {
 }
 
 class HealthReportsPage extends StatelessWidget {
-  const HealthReportsPage({super.key});
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -237,8 +219,6 @@ class HealthReportsPage extends StatelessWidget {
 }
 
 class ProfilePage extends StatelessWidget {
-  const ProfilePage({super.key});
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -249,8 +229,6 @@ class ProfilePage extends StatelessWidget {
 }
 
 class SettingsPage extends StatelessWidget {
-  const SettingsPage({super.key});
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -258,16 +236,4 @@ class SettingsPage extends StatelessWidget {
       body: const Center(child: Text('Settings Page')),
     );
   }
-}
-
-class LogoutPage extends StatelessWidget {
-  const LogoutPage({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text('Logout')),
-      body: const Center(child: Text('You have been logged out.')),
-    );
-  }
-}
+} 
