@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:user_profile_management/const/theme.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -30,12 +31,12 @@ class _HomePageState extends State<HomePage> {
         title: Row(
           children: [
             Image.asset('assets/logo.png', height: 30), // Replace with your logo path
-            const SizedBox(width: 8),
+            const SizedBox(width: 25),
             const Text(
               'Pusat Kesihatan UTM',
               style: TextStyle(
                 color: Colors.black,
-                fontSize: 5,
+                fontSize: 15,
                 fontWeight: FontWeight.bold,
               ),
             ),
@@ -67,7 +68,7 @@ class _HomePageState extends State<HomePage> {
                 });
               },
               children: [
-                Image.asset('assets/home1.jpg', fit: BoxFit.cover), // Replace with your image paths
+                Image.asset('assets/home1.jpg', fit: BoxFit.cover), 
                 Image.asset('assets/home1.jpg', fit: BoxFit.cover),
                 Image.asset('assets/home1.jpg', fit: BoxFit.cover),
               ],
@@ -110,7 +111,7 @@ class _HomePageState extends State<HomePage> {
             label: 'Settings',
           ),
         ],
-        selectedItemColor: Colors.green,
+        selectedItemColor: primaryColor,
         unselectedItemColor: Colors.grey,
         onTap: (index) {
           if (index == 0) {
@@ -140,7 +141,7 @@ class _HomePageState extends State<HomePage> {
       height: 8.0,
       width: isActive ? 16.0 : 8.0,
       decoration: BoxDecoration(
-        color: isActive ? Colors.green : Colors.grey,
+        color: isActive ? primaryColor : Colors.grey,
         borderRadius: BorderRadius.circular(4.0),
       ),
     );
@@ -162,7 +163,7 @@ class _HomePageState extends State<HomePage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(icon, size: 40, color: Colors.green),
+            Icon(icon, size: 40, color: primaryColor),
             const SizedBox(height: 8),
             Text(
               title,

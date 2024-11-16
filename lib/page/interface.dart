@@ -28,7 +28,7 @@ class InterfacePage extends StatelessWidget {
               ),
             ),
             const Text(
-              'AUTOMANAGER',
+              'A  U  T  O  M  A  N  A  G  E  R',
               style: TextStyle(
                 fontSize: 16,
                 letterSpacing: 2.0,
