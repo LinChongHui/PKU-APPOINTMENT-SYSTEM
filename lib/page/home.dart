@@ -29,13 +29,13 @@ class _HomePageState extends State<HomePage> {
         ),
         title: Row(
           children: [
-            Image.asset('assets/image/logo.png', height: 30), // Replace with your logo path
+            Image.asset('assets/logo.png', height: 30), // Replace with your logo path
             const SizedBox(width: 8),
             const Text(
               'Pusat Kesihatan UTM',
               style: TextStyle(
                 color: Colors.black,
-                fontSize: 18,
+                fontSize: 5,
                 fontWeight: FontWeight.bold,
               ),
             ),
@@ -67,9 +67,9 @@ class _HomePageState extends State<HomePage> {
                 });
               },
               children: [
-                Image.asset('assets/image1.jpg', fit: BoxFit.cover), // Replace with your image paths
-                Image.asset('assets/image2.jpg', fit: BoxFit.cover),
-                Image.asset('assets/image3.jpg', fit: BoxFit.cover),
+                Image.asset('assets/home1.jpg', fit: BoxFit.cover), // Replace with your image paths
+                Image.asset('assets/home1.jpg', fit: BoxFit.cover),
+                Image.asset('assets/home1.jpg', fit: BoxFit.cover),
               ],
             ),
           ),
