@@ -8,7 +8,7 @@ Sprint 1:
 <tr>
 <th> No
 <th> Source code
-<th> Desription
+<th> Description
 <th> Location
 </tr>
 
@@ -48,7 +48,7 @@ Sprint 1:
 <tr>
 <th> No
 <th> Source code
-<th> Desription
+<th> Description
 <th> Location
 </tr>
 
@@ -67,7 +67,7 @@ Sprint 1:
 <tr>
 <th> No
 <th> Source code
-<th> Desription
+<th> Description
 <th> Location
 </tr>
 
@@ -86,7 +86,7 @@ Sprint 1:
 <tr>
 <th> No
 <th> Source code
-<th> Desription
+<th> Description
 <th> Location
 </tr>
 
@@ -104,7 +104,7 @@ Sprint 1:
 <tr>
 <th> No
 <th> Source code
-<th> Desription
+<th> Description
 <th> Location
 </tr>
 
@@ -122,7 +122,7 @@ Sprint 1:
 <tr>
 <th> No
 <th> Source code
-<th> Desription
+<th> Description
 <th> Location
 </tr>
 
