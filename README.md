@@ -19,23 +19,34 @@ samples, guidance on mobile development, and a full API reference.
 ## Member 1: Lin Chong Hui
 Sprint 1:
 <table>
+
 <tr>
-<th>Home.dart
+<th> Source code
+<th> Desription
+<th> Path
+</tr>
+
+<tr>
+<th> Home.dart
+<th> Home page of application
 <th><a href="lib/page/home.dart">click me</a>
 </tr>
 
 <tr>
-<th>Interface.dart
+<th> Interface.dart
+<th> Interface of application
 <th><a href="lib/page/interface.dart">click me</a>
 </tr>
 
 <tr>
 <th>Login.dart
+<th> Login page of application
 <th><a href="lib/page/login.dart">click me</a>
 </tr>
 
 <tr>
 <th>Registration.dart
+<th> Registration page of application
 <th><a href="lib/page/registration.dart">click me</a>
 </tr>
 </table>
