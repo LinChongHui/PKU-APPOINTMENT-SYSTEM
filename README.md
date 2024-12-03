@@ -27,7 +27,7 @@ Sprint 1:
 </tr>
 
 <tr>
-<th> <b>Home.dart</b>
+<th> Home.dart
 <th> Home page of application
 <th><a href="lib/page/home.dart">click me</a>
 </tr>
