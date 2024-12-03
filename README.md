@@ -1,93 +1,129 @@
-# appointment_system2
+#PKU APPOINTMENT APPLICATION
 
-A new Flutter project.
-
-## Getting Started
-
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
-
-# FRONT-END CODING 
-## Member 1: Lin Chong Hui
+## FRONT-END CODING 
+### Member 1: Lin Chong Hui
 Sprint 1:
 <table>
 
 <tr>
+<th> No
 <th> Source code
 <th> Desription
-<th> Path
+<th> Location
 </tr>
 
 <tr>
+<th> 1
 <th> Home.dart
 <th> Home page of application
 <th><a href="lib/page/home.dart">click me</a>
 </tr>
 
 <tr>
+<th> 2
 <th> Interface.dart
 <th> Interface of application
 <th><a href="lib/page/interface.dart">click me</a>
 </tr>
 
 <tr>
+<th> 3
 <th>Login.dart
 <th> Login page of application
 <th><a href="lib/page/login.dart">click me</a>
 </tr>
 
 <tr>
+<th> 4
 <th>Registration.dart
 <th> Registration page of application
 <th><a href="lib/page/registration.dart">click me</a>
 </tr>
 </table>
 
-## Member 2: Tay Shun Wei
+### Member 2: Tay Shun Wei
 Sprint 1:
 <table>
+
 <tr>
-<th>Home.dart
+<th> No
+<th> Source code
+<th> Desription
+<th> Location
+</tr>
+
+<tr>
+<th> 1
+<th> update later
+<th> -
 <th><a href="lib/page/home.dart">click me</a>
 </tr>
 </table>
 
-## Member 3: Aeron Goh Ming Lun
+### Member 3: Aeron Goh Ming Lun
 Sprint 1:
 <table>
+
 <tr>
-<th>Home.dart
+<th> No
+<th> Source code
+<th> Desription
+<th> Location
+</tr>
+
+<tr>
+<th> 1
+<th> update later
+<th> -
 <th><a href="lib/page/home.dart">click me</a>
 </tr>
 </table>
 
-## Member 4: Liow Chee Suan
+### Member 4: Liow Chee Suan
 Sprint 1:
 <table>
+
 <tr>
-<th>Home.dart
+<th> No
+<th> Source code
+<th> Desription
+<th> Location
+</tr>
+
+<tr>
+<th> 1
+<th> update later
+<th> -
 <th><a href="lib/page/home.dart">click me</a>
 </tr>
 </table>
 
-# BACK-END CODING
+## BACK-END CODING
 <table>
+
+<tr>
+<th> No
+<th> Source code
+<th> Desription
+<th> Location
+</tr>
+
 <tr>
 <th>firebase_options.dart
 <th><a href="lib/const/firebase_options.dart">click me</a>
 </tr>
 </table>
 
-# THEME CONSTANT CODING
+## THEME CONSTANT CODING
 <table>
+
+<tr>
+<th> No
+<th> Source code
+<th> Desription
+<th> Location
+</tr>
+
 <tr>
 <th>theme.dart
 <th><a href="lib/const/theme.dart">click me</a>
