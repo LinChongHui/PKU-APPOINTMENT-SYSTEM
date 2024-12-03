@@ -21,6 +21,7 @@ Sprint 1:
 <table>
 <tr>
 <th>Home.dart
+<th><a="lib/page/home.dart">click me</a>
 </tr>
 <tr>
 <th>Interface.dart
