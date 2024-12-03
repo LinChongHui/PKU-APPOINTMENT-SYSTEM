@@ -109,7 +109,9 @@ Sprint 1:
 </tr>
 
 <tr>
+<th> 1
 <th>firebase_options.dart
+<th> Library from Firebase
 <th><a href="lib/const/firebase_options.dart">click me</a>
 </tr>
 </table>
@@ -125,7 +127,9 @@ Sprint 1:
 </tr>
 
 <tr>
+<th> 1
 <th>theme.dart
+<th> Theme of the Application
 <th><a href="lib/const/theme.dart">click me</a>
 </tr>
 </table>
