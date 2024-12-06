@@ -58,6 +58,20 @@ Sprint 1:
 <th> Appointment Page of application
 <th><a href="lib/Screen/AppointmentPage.dart">click me</a>
 </tr>
+
+<tr>
+<th> 2
+<th> AvailableDatesPage.dart
+<th> AvailableDates Page of application
+<th><a href="lib/Screen/AvailableDatesPage.dart">click me</a>
+</tr>
+
+<tr>
+<th> 3
+<th> ServiceListPage.dart
+<th> ServiceList Page of application
+<th><a href="lib/Screen/ServiceListPage.dart">click me</a>
+</tr>
 </table>
 
 ### Member 3: Aeron Goh Ming Lun
