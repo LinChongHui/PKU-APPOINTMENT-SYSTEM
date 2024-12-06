@@ -54,9 +54,9 @@ Sprint 1:
 
 <tr>
 <th> 1
-<th> update later
-<th> -
-<th><a href="lib/page/home.dart">click me</a>
+<th> AppointmentPage.dart
+<th> Appointment Page of application
+<th><a href="[lib/page/home.dart](https://github.com/LinChongHui/PKU-APPOINTMENT-SYSTEM/blob/main/lib/Screen/AppointmentPage.dart)">click me</a>
 </tr>
 </table>
 
