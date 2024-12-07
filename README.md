@@ -95,7 +95,16 @@ Sprint 1:
 <th> Admin Health Reports Page of Application
 <th><a href="lib/Screen/admin_health_reports_screen.dart">click me</a>
 </tr>
+
+
+<tr>
+<th> 2
+<th> user_health_report_screen.dart
+<th> User Health Reports Page of Application
+<th><a href="lib/Screen/user_health_report_screen.dart">click me</a>
+</tr>
 </table>
+
 
 ### Member 4: Liow Chee Suan
 Sprint 1:
