@@ -106,8 +106,8 @@ Sprint 1:
 
 <tr>
 <th> 3
-<th> user_health_report_screen.dart
-<th> User Health Reports Page of Application
+<th> health_report_model.dart
+<th> Health Reports Page of Application
 <th><a href="lib/Screen/health_report_model.dart">click me</a>
 </tr>
 
