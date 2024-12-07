@@ -91,9 +91,9 @@ Sprint 1:
 
 <tr>
 <th> 1
-<th> update later
-<th> -
-<th><a href="lib/page/home.dart">click me</a>
+<th> admin_health_reports_screen.dart
+<th> Admin Health Reports Page of Application
+<th><a href="lib/Screen/admin_health_reports_screen.dart">click me</a>
 </tr>
 </table>
 
