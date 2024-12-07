@@ -119,9 +119,9 @@ Sprint 1:
 
 <tr>
 <th> 1
-<th> update later
+<th> Emergency Call Button
 <th> -
-<th><a href="lib/page/home.dart">click me</a>
+<th><a href="lib/Screen/emergency_call.dart">click me</a>
 </tr>
 </table>
 
