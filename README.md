@@ -55,7 +55,7 @@ Sprint 2:
 <th> 1
 <th> Home.dart
 <th> Main page of application
-<th><a href="lib/Screen/AppointmentPage.dart">click me</a>
+<th><a href="lib/LinChongHuiSprint2/home.dart">click me</a>
 </tr>
 
 <tr>
