@@ -179,7 +179,6 @@ Sprint 2:
 <th> Source code
 <th> Description
 <th> Location
-<th> back end code Location
 </tr>
 
 <tr>
