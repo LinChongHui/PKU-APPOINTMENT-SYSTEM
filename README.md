@@ -140,39 +140,3 @@ Sprint 1:
 <th><a href="lib/BackEnd/firebase_readPhoneNum.dart">click me</a>
 </tr>
 </table>
-
-## BACK-END CODING
-<table>
-
-<tr>
-<th> No
-<th> Source code
-<th> Description
-<th> Location
-</tr>
-
-<tr>
-<th> 1
-<th>firebase_options.dart
-<th> Library from Firebase
-<th><a href="lib/const/firebase_options.dart">click me</a>
-</tr>
-</table>
-
-## THEME CONSTANT CODING
-<table>
-
-<tr>
-<th> No
-<th> Source code
-<th> Description
-<th> Location
-</tr>
-
-<tr>
-<th> 1
-<th>theme.dart
-<th> Theme of the Application
-<th><a href="lib/const/theme.dart">click me</a>
-</tr>
-</table>
