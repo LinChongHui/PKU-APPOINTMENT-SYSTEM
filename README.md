@@ -69,7 +69,7 @@ Sprint 2:
 <th> 3
 <th> tabSetting.dart
 <th> Setting tab of application
-<th><a href="lib/Screen/AppointmentPage.dart">click me</a>
+<th><a href="lib/LinChongHuiSprint2/tabSetting.dart">click me</a>
 </tr>
 </table>
 
