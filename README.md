@@ -71,8 +71,7 @@ Sprint 2:
 <th> Setting tab of application
 <th><a href="lib/Screen/AppointmentPage.dart">click me</a>
 </tr>
-
-
+</table>
 
 ### Member 2: Tay Shun Wei
 Sprint 1:
