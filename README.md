@@ -225,5 +225,12 @@ Sprint 2:
 <th> Page to show map and calculate the path
 <th><a href="lib/route_finder_map.dart">click me</a>
 </tr>
+
+<tr>
+<th> 2
+<th> route_service.dart
+<th> To grand the permission of location
+<th><a href="lib/route_service.dart">click me</a>
+</tr>
 </table>
 
