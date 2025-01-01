@@ -146,14 +146,14 @@ Sprint 3:
 <th> LiveQueue(Admin).dart
 <th> LiveQueue(Admin) Page of application
 <th><a href=https://github.com/LinChongHui/PKU-APPOINTMENT-SYSTEM/blob/main/lib/Screen/admin_screen.dart>click me</a>
-<th><a href=https://github.com/LinChongHui/PKU-APPOINTMENT-SYSTEM/blob/main/lib/Screen/user_screen.dart>click me</a>
+<th><a href=https://github.com/LinChongHui/PKU-APPOINTMENT-SYSTEM/blob/main/lib/services(TayShunWei%5Cback%20end)/firebase_update_queue(admin).dart>click me</a>
 </tr>
 
 <tr>
 <th> 2
 <th> LiveQueue(User).dart
 <th> LiveQueue(User) Page of application
-<th><a href=>click me</a>
+<th><a href=https://github.com/LinChongHui/PKU-APPOINTMENT-SYSTEM/blob/main/lib/Screen/user_screen.dart>click me</a>
 <th><a href=>click me</a>
 </tr>
 
