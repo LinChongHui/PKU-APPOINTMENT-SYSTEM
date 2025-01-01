@@ -145,7 +145,7 @@ Sprint 3:
 <th> 1
 <th> LiveQueue(Admin).dart
 <th> LiveQueue(Admin) Page of application
-<th><a href=>click me</a>
+<th><a href=https://github.com/LinChongHui/PKU-APPOINTMENT-SYSTEM/blob/main/lib/Screen/admin_screen.dart>click me</a>
 <th><a href=>click me</a>
 </tr>
 
