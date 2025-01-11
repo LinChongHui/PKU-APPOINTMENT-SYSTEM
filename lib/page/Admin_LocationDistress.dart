@@ -5,6 +5,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:location/location.dart';
+import 'package:user_profile_management/back-end/firebase_RouteService.dart';
 
 class AdminMapPage extends StatefulWidget {
   const AdminMapPage({Key? key}) : super(key: key);
@@ -40,7 +41,6 @@ class _AdminMapPageState extends State<AdminMapPage> {
   }
 
   Future<void> _loadDistressSignals() async {
-    // Listen to real-time updates from Firestore
     FirebaseFirestore.instance
         .collection('distress_signals')
         .orderBy('timestamp', descending: true)
@@ -75,41 +75,6 @@ class _AdminMapPageState extends State<AdminMapPage> {
     });
   }
 
-  Future<void> _getRoute(LatLng destination) async {
-    if (_currentLocation == null) return;
-
-    setState(() {
-      _isLoadingRoute = true;
-      _routePoints = [];
-    });
-
-    try {
-      String url = 'https://router.project-osrm.org/route/v1/driving/'
-          '${_currentLocation!.longitude},${_currentLocation!.latitude};'
-          '${destination.longitude},${destination.latitude}'
-          '?overview=full&geometries=geojson';
-
-      final response = await http.get(Uri.parse(url));
-
-      if (response.statusCode == 200) {
-        final data = json.decode(response.body);
-        if (data['routes'] != null && data['routes'].isNotEmpty) {
-          final coordinates = data['routes'][0]['geometry']['coordinates'] as List;
-          _routePoints = coordinates
-              .map((coord) => LatLng(coord[1].toDouble(), coord[0].toDouble()))
-              .toList();
-          setState(() {});
-        }
-      }
-    } catch (e) {
-      print('Route error: $e');
-    } finally {
-      setState(() {
-        _isLoadingRoute = false;
-      });
-    }
-  }
-
   void _showDistressDetails(LatLng location, DateTime timestamp) {
     showDialog(
       context: context,
@@ -132,13 +97,29 @@ class _AdminMapPageState extends State<AdminMapPage> {
           ElevatedButton(
             onPressed: () {
               Navigator.pop(context);
-              _getRoute(location);
+              _getRouteToDistressSignal(location);
             },
             child: const Text('Show Route'),
           ),
         ],
       ),
     );
+  }
+
+  Future<void> _getRouteToDistressSignal(LatLng destination) async {
+    if (_currentLocation == null) return;
+
+    setState(() {
+      _isLoadingRoute = true;
+    });
+
+    final currentLatLng = LatLng(_currentLocation!.latitude!, _currentLocation!.longitude!);
+    final points = await RouteService.getRoute(currentLatLng, destination);
+    
+    setState(() {
+      _routePoints = points;
+      _isLoadingRoute = false;
+    });
   }
 
   @override
@@ -164,7 +145,7 @@ class _AdminMapPageState extends State<AdminMapPage> {
                       'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
                   subdomains: const ['a', 'b', 'c'],
                 ),
-                 MarkerLayer(markers: [
+                MarkerLayer(markers: [
                   ..._markers,
                   if (_currentLocation != null)
                     Marker(
@@ -184,7 +165,7 @@ class _AdminMapPageState extends State<AdminMapPage> {
                     polylines: [
                       Polyline(
                         points: _routePoints,
-                        strokeWidth: 3.0,
+                        strokeWidth: 4.0,
                         color: Colors.blue.withOpacity(0.8),
                       ),
                     ],

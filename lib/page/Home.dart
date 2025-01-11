@@ -9,6 +9,7 @@ import 'package:user_profile_management/page/Admin_UserManagement.dart';
 import 'package:user_profile_management/page/User_HealthAnalytics.dart';
 import 'package:user_profile_management/page/Admin_LiveQueueManagement.dart';
 import 'package:user_profile_management/page/Admin_LocationDistress.dart';
+import 'package:user_profile_management/page/User_EmergencyCall.dart';
 import 'package:user_profile_management/page/Admin_ReportNMedicial.dart';
 
 class HomePage extends StatefulWidget {
@@ -132,19 +133,13 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
                   _buildFABOption(
-                    icon: Icons.location_on,
-                    label: 'Locate',
-                    onTap: () {
-                      setState(() => _showFABOptions = false);
-                      ("Locate button pressed");
-                    },
-                  ),
-                  const SizedBox(height: 10),
-                  _buildFABOption(
                     icon: Icons.call,
                     label: 'Emergency Call',
                     onTap: () {
-                      setState(() => _showFABOptions = false);
+                       Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => const EmergencyCall()),
+                      );
                     },
                   ),
                 ],
