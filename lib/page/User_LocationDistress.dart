@@ -125,8 +125,9 @@ class _LocationMapPageState extends State<LocationMapPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Location Map'),
+      appBar: const PreferredSize(
+        preferredSize: Size.fromHeight(kToolbarHeight),
+        child: AppBarAndBackArrow(title: ' Location Map'),
       ),
       body: _currentLocation == null
           ? const Center(child: CircularProgressIndicator())

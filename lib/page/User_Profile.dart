@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:user_profile_management/back-end/firebase_Profile.dart';
 import 'User_EditProfile.dart';
 import 'package:user_profile_management/page/Widget_outside_appbar.dart';
+import 'package:user_profile_management/page/Theme.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({Key? key}) : super(key: key);
@@ -236,8 +237,9 @@ class _ProfilePageState extends State<ProfilePage> {
                   ),
                 );
               },
-              style: ElevatedButton.styleFrom(backgroundColor: Colors.teal),
-              child: const Text('Edit Profile'),
+              style: ElevatedButton.styleFrom(backgroundColor:firstcolour ),
+              child: const Text('Edit Profile',
+              style: TextStyle(color: fivethcolour),),
             ),
           ],
         ),

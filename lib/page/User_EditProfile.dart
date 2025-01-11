@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 //import 'package:image_picker/image_picker.dart';
 import 'package:user_profile_management/page/Theme.dart';
 import 'package:user_profile_management/back-end/firebase_EditProfile.dart';
+import 'package:user_profile_management/page/Widget_inside_appbar_backarrow.dart';
 
 class EditProfilePage extends StatefulWidget {
   final String userID;
@@ -153,12 +154,9 @@ class _EditProfilePageState extends State<EditProfilePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
-          onPressed: () => Navigator.pop(context),
-        ),
-        title: const Text('Edit Profile'),
+      appBar: const PreferredSize(
+        preferredSize: Size.fromHeight(kToolbarHeight),
+        child: AppBarAndBackArrow(title: 'Edit Profile'),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),

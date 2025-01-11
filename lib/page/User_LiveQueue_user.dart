@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:user_profile_management/back-end/firebase_UserLiveQueue.dart';
+import 'package:user_profile_management/page/Theme.dart';
 
 class UserScreen extends StatefulWidget {
   @override
@@ -105,7 +106,9 @@ class _UserScreenState extends State<UserScreen> {
             SizedBox(height: 10),
             ElevatedButton(
               onPressed: _updateUserNumber,
-              child: Text('Submit Your Number'),
+              child: const Text('Submit Your Number',
+              style: const TextStyle(color: fivethcolour),
+              ),
               style: ElevatedButton.styleFrom(backgroundColor: Colors.teal),
             ),
             SizedBox(height: 20),
