@@ -1,43 +1,139 @@
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:intl/intl.dart';
 import 'package:user_profile_management/back-end/firebase_MedicalRecord.dart';
-import 'package:user_profile_management/page/User_MedicalRecordService.dart';
 
-class EditMedicalRecord extends StatefulWidget {
+class AddEditRecordForm extends StatefulWidget {
   final MedicalRecord? record;
-
-  const EditMedicalRecord({super.key, this.record});
+  const AddEditRecordForm({Key? key, this.record}) : super(key: key);
 
   @override
-  _EditMedicalRecordState createState() => _EditMedicalRecordState();
+  _AddEditRecordFormState createState() => _AddEditRecordFormState();
 }
 
-class _EditMedicalRecordState extends State<EditMedicalRecord> {
+class _AddEditRecordFormState extends State<AddEditRecordForm> {
   final _formKey = GlobalKey<FormState>();
-  final _recordService = MedicalRecordService();
-  late DateTime selectedDate;
-  late TimeOfDay selectedTime;
-  List<String> reasons = [''];
-  List<Map<String, String>> medicines = [
-    {'name': '', 'dosage': ''}
-  ];
+  late DateTime _selectedDate;
+  late TextEditingController _timeController;
+  late TextEditingController _matricNumberController;
+  List<String> _reasons = [];
+  List<Medicine> _medicines = [];
+  final _reasonController = TextEditingController();
+  bool _isLoading = false;
+
+  // Controllers for medicine input
+  final _medicineNameController = TextEditingController();
+  final _medicineDosageController = TextEditingController();
+  final _medicineFrequencyController = TextEditingController();
 
   @override
   void initState() {
     super.initState();
-    if (widget.record != null) {
-      selectedDate = widget.record!.visitDate;
-      selectedTime = TimeOfDay(
-        hour: int.parse(widget.record!.visitTime.split(':')[0]),
-        minute: int.parse(widget.record!.visitTime.split(':')[1]),
+    _selectedDate = widget.record?.visitDate ?? DateTime.now();
+    _timeController = TextEditingController(text: widget.record?.time ?? '');
+    _matricNumberController = TextEditingController(text: widget.record?.matricNumber ?? '');
+    _reasons = widget.record?.reasons.toList() ?? [];
+    _medicines = widget.record?.medicines.toList() ?? [];
+  }
+
+  void _addMedicine() {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Add Medicine'),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            TextField(
+              controller: _medicineNameController,
+              decoration: const InputDecoration(labelText: 'Medicine Name'),
+            ),
+            TextField(
+              controller: _medicineDosageController,
+              decoration: const InputDecoration(labelText: 'Dosage'),
+            ),
+            TextField(
+              controller: _medicineFrequencyController,
+              decoration: const InputDecoration(labelText: 'Frequency'),
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Cancel'),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              setState(() {
+                _medicines.add(Medicine(
+                  name: _medicineNameController.text,
+                  dosage: _medicineDosageController.text,
+                  frequency: _medicineFrequencyController.text,
+                ));
+              });
+              _medicineNameController.clear();
+              _medicineDosageController.clear();
+              _medicineFrequencyController.clear();
+              Navigator.pop(context);
+            },
+            child: const Text('Add'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Future<void> _validateMatricNumber(String matricNumber) async {
+    final userDoc = await FirebaseFirestore.instance
+        .collection('users')
+        .where('personalInfo.matricNumber', isEqualTo: matricNumber)
+        .get();
+
+    if (userDoc.docs.isEmpty) {
+      throw Exception('Student with matric number $matricNumber not found');
+    }
+  }
+
+  Future<void> _saveRecord() async {
+    if (!_formKey.currentState!.validate()) return;
+
+    setState(() => _isLoading = true);
+
+    try {
+      // Validate matric number exists
+      await _validateMatricNumber(_matricNumberController.text);
+
+      final record = MedicalRecord(
+        id: widget.record?.id ?? '',
+        matricNumber: _matricNumberController.text,
+        visitDate: _selectedDate,
+        time: _timeController.text,
+        reasons: _reasons,
+        medicines: _medicines,
       );
-      reasons = List.from(widget.record!.reasons);
-      medicines = widget.record!.medicines.entries
-          .map((e) => {'name': e.key, 'dosage': e.value})
-          .toList();
-    } else {
-      selectedDate = DateTime.now();
-      selectedTime = TimeOfDay.now();
+
+      if (widget.record == null) {
+        await FirebaseFirestore.instance
+            .collection('medical_records')
+            .add(record.toMap());
+      } else {
+        await FirebaseFirestore.instance
+            .collection('medical_records')
+            .doc(record.id)
+            .update(record.toMap());
+      }
+
+      Navigator.pop(context);
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Record saved successfully')),
+      );
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Error: $e')),
+      );
+    } finally {
+      setState(() => _isLoading = false);
     }
   }
 
@@ -46,194 +142,163 @@ class _EditMedicalRecordState extends State<EditMedicalRecord> {
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.record == null ? 'Add Record' : 'Edit Record'),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.save),
+            onPressed: _isLoading ? null : _saveRecord,
+          ),
+        ],
       ),
       body: Form(
         key: _formKey,
         child: ListView(
-          padding: const EdgeInsets.all(16.0),
+          padding: const EdgeInsets.all(16),
           children: [
+            TextFormField(
+              controller: _matricNumberController,
+              decoration: const InputDecoration(
+                labelText: 'Matric Number',
+                border: OutlineInputBorder(),
+              ),
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return 'Please enter matric number';
+                }
+                return null;
+              },
+            ),
+            const SizedBox(height: 16),
             ListTile(
               title: Text(
-                  'Date: ${DateFormat('dd MMM yyyy').format(selectedDate)}'),
+                'Date: ${DateFormat('yyyy-MM-dd').format(_selectedDate)}',
+              ),
               trailing: const Icon(Icons.calendar_today),
-              onTap: _selectDate,
-            ),
-            ListTile(
-              title: Text('Time: ${selectedTime.format(context)}'),
-              trailing: const Icon(Icons.access_time),
-              onTap: _selectTime,
+              onTap: () async {
+                final date = await showDatePicker(
+                  context: context,
+                  initialDate: _selectedDate,
+                  firstDate: DateTime(2000),
+                  lastDate: DateTime.now(),
+                );
+                if (date != null) {
+                  setState(() => _selectedDate = date);
+                }
+              },
             ),
             const SizedBox(height: 16),
-            const Text('Reasons:',
-                style: TextStyle(fontWeight: FontWeight.bold)),
-            ...reasons.asMap().entries.map((entry) {
-              return Padding(
-                padding: const EdgeInsets.symmetric(vertical: 8.0),
-                child: Row(
+            TextFormField(
+              controller: _timeController,
+              decoration: const InputDecoration(
+                labelText: 'Time',
+                border: OutlineInputBorder(),
+              ),
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return 'Please enter time';
+                }
+                return null;
+              },
+            ),
+            const SizedBox(height: 16),
+            // Reasons Section
+            Card(
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Expanded(
-                      child: TextFormField(
-                        initialValue: entry.value,
-                        decoration: const InputDecoration(
-                          labelText: 'Reason',
-                          border: OutlineInputBorder(),
-                        ),
-                        onChanged: (value) => reasons[entry.key] = value,
-                        validator: (value) => value?.isEmpty == true
-                            ? 'Please enter a reason'
-                            : null,
+                    const Text(
+                      'Reasons',
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
                       ),
                     ),
-                    IconButton(
-                      icon: const Icon(Icons.remove_circle),
-                      onPressed: () {
-                        setState(() {
-                          reasons.removeAt(entry.key);
-                        });
-                      },
-                    ),
-                  ],
-                ),
-              );
-            }),
-            ElevatedButton(
-              onPressed: () {
-                setState(() {
-                  reasons.add('');
-                });
-              },
-              child: const Text('Add Reason'),
-            ),
-            const SizedBox(height: 16),
-            const Text('Medicines:',
-                style: TextStyle(fontWeight: FontWeight.bold)),
-            ...medicines.asMap().entries.map((entry) {
-              return Card(
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Column(
-                    children: [
-                      Row(
-                        children: [
-                          Expanded(
-                            child: TextFormField(
-                              initialValue: entry.value['name'],
-                              decoration: const InputDecoration(
-                                labelText: 'Medicine Name',
-                                border: OutlineInputBorder(),
-                              ),
-                              onChanged: (value) =>
-                                  medicines[entry.key]['name'] = value,
-                              validator: (value) => value?.isEmpty == true
-                                  ? 'Please enter medicine name'
-                                  : null,
+                    const SizedBox(height: 8),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: TextField(
+                            controller: _reasonController,
+                            decoration: const InputDecoration(
+                              labelText: 'Add Reason',
+                              border: OutlineInputBorder(),
                             ),
                           ),
-                          IconButton(
-                            icon: const Icon(Icons.remove_circle),
-                            onPressed: () {
+                        ),
+                        IconButton(
+                          icon: const Icon(Icons.add),
+                          onPressed: () {
+                            if (_reasonController.text.isNotEmpty) {
                               setState(() {
-                                medicines.removeAt(entry.key);
+                                _reasons.add(_reasonController.text);
+                                _reasonController.clear();
                               });
+                            }
+                          },
+                        ),
+                      ],
+                    ),
+                    ..._reasons.map((reason) => ListTile(
+                          title: Text(reason),
+                          trailing: IconButton(
+                            icon: const Icon(Icons.remove),
+                            onPressed: () {
+                              setState(() => _reasons.remove(reason));
                             },
                           ),
-                        ],
-                      ),
-                      const SizedBox(height: 8),
-                      TextFormField(
-                        initialValue: entry.value['dosage'],
-                        decoration: const InputDecoration(
-                          labelText: 'Dosage/Instructions',
-                          border: OutlineInputBorder(),
-                        ),
-                        onChanged: (value) =>
-                            medicines[entry.key]['dosage'] = value,
-                        validator: (value) => value?.isEmpty == true
-                            ? 'Please enter dosage'
-                            : null,
-                      ),
-                    ],
-                  ),
+                        )),
+                  ],
                 ),
-              );
-            }),
-            ElevatedButton(
-              onPressed: () {
-                setState(() {
-                  medicines.add({'name': '', 'dosage': ''});
-                });
-              },
-              child: const Text('Add Medicine'),
+              ),
+            ),
+            const SizedBox(height: 16),
+            // Medicines Section
+            Card(
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        const Text(
+                          'Medicines',
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        ElevatedButton.icon(
+                          onPressed: _addMedicine,
+                          icon: const Icon(Icons.add),
+                          label: const Text('Add Medicine'),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 8),
+                    ..._medicines.map((medicine) => Card(
+                          child: ListTile(
+                            title: Text(medicine.name),
+                            subtitle: Text(
+                              'Dosage: ${medicine.dosage}\nFrequency: ${medicine.frequency}',
+                            ),
+                            trailing: IconButton(
+                              icon: const Icon(Icons.delete),
+                              onPressed: () {
+                                setState(() => _medicines.remove(medicine));
+                              },
+                            ),
+                          ),
+                        )),
+                  ],
+                ),
+              ),
             ),
           ],
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _saveRecord,
-        child: const Icon(Icons.save),
-      ),
     );
-  }
-
-  Future<void> _selectDate() async {
-    final DateTime? pickedDate = await showDatePicker(
-      context: context,
-      initialDate: selectedDate,
-      firstDate: DateTime(2000),
-      lastDate: DateTime(2101),
-    );
-    if (pickedDate != null && pickedDate != selectedDate) {
-      setState(() {
-        selectedDate = pickedDate;
-      });
-    }
-  }
-
-  Future<void> _selectTime() async {
-    final TimeOfDay? pickedTime = await showTimePicker(
-      context: context,
-      initialTime: selectedTime,
-    );
-    if (pickedTime != null && pickedTime != selectedTime) {
-      setState(() {
-        selectedTime = pickedTime;
-      });
-    }
-  }
-
-  Future<void> _saveRecord() async {
-    if (_formKey.currentState!.validate()) {
-      _formKey.currentState!.save();
-
-      final formattedHour = selectedTime.hour.toString().padLeft(2, '0');
-      final formattedMinute = selectedTime.minute.toString().padLeft(2, '0');
-
-      final medicinesMap = {
-        for (var medicine in medicines.where((m) => m['name']!.isNotEmpty))
-          medicine['name']!: medicine['dosage']!
-      };
-
-      final record = MedicalRecord(
-        id: widget.record?.id ??
-            DateTime.now().millisecondsSinceEpoch.toString(),
-        visitDate: selectedDate,
-        visitTime: '$formattedHour:$formattedMinute',
-        reasons: reasons.where((reason) => reason.isNotEmpty).toList(),
-        medicines: medicinesMap,
-      );
-
-      if (widget.record == null) {
-        await _recordService.addRecord(record);
-      } else {
-        await _recordService.updateRecord(record);
-      }
-
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Record saved successfully')),
-        );
-        Navigator.pop(context);
-      }
-    }
   }
 }

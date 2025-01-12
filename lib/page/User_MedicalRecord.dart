@@ -1,88 +1,102 @@
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:intl/intl.dart';
-import 'package:user_profile_management/page/User_MedicalRecordService.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:user_profile_management/back-end/firebase_MedicalRecord.dart';
+import 'package:user_profile_management/page/Admin_EditMedicalRecord.dart';
 
-class UserMedicalHistory extends StatelessWidget {
-  final _recordService = MedicalRecordService();
-
-  UserMedicalHistory({super.key});
-
+class UserRecordsView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Medical History'),
-        backgroundColor: Colors.teal,
+        title: const Text('My Medical Records'),
       ),
-      body: StreamBuilder<List<MedicalRecord>>(
-        stream: _recordService.recordsStream,
-        initialData: _recordService.getRecords(),
+      body: FutureBuilder<DocumentSnapshot>(
+        future: FirebaseFirestore.instance.collection('users').doc(FirebaseAuth.instance.currentUser!.uid).get(),
         builder: (context, snapshot) {
           if (snapshot.hasError) {
             return Center(child: Text('Error: ${snapshot.error}'));
           }
 
-          final records = snapshot.data ?? [];
-
-          if (records.isEmpty) {
-            return const Center(child: Text('No medical records found'));
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(child: CircularProgressIndicator());
           }
 
-          return ListView.builder(
-            padding: const EdgeInsets.all(16),
-            itemCount: records.length,
-            itemBuilder: (context, index) {
-              final record = records[index];
+          if (!snapshot.hasData || !snapshot.data!.exists) {
+            return const Center(child: Text('User data not found'));
+          }
 
-              return Card(
-                child: Padding(
-                  padding: const EdgeInsets.all(16),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'Visit On',
-                        style: TextStyle(
-                          color: Colors.grey[600],
-                          fontSize: 12,
-                        ),
+          String matricNumber = snapshot.data!['personalInfo']['matricNumber'];
+
+          return StreamBuilder<QuerySnapshot>(
+            stream: FirebaseFirestore.instance
+                .collection('medical_records')
+                .where('matricNumber', isEqualTo: matricNumber)
+                .orderBy('visitDate', descending: true)
+                .snapshots(),
+            builder: (context, snapshot) {
+              if (snapshot.hasError) {
+                return Center(child: Text('Error: ${snapshot.error}'));
+              }
+
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return const Center(child: CircularProgressIndicator());
+              }
+
+              if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+                return const Center(child: Text('No medical records found'));
+              }
+
+              return ListView.builder(
+                padding: const EdgeInsets.all(16),
+                itemCount: snapshot.data!.docs.length,
+                itemBuilder: (context, index) {
+                  var doc = snapshot.data!.docs[index];
+                  var record = MedicalRecord.fromMap(
+                    doc.data() as Map<String, dynamic>,
+                    doc.id,
+                  );
+
+                  return Card(
+                    child: ExpansionTile(
+                      title: Text(
+                        DateFormat('dd MMM yyyy').format(record.visitDate),
+                        style: const TextStyle(fontWeight: FontWeight.bold),
                       ),
-                      Text(
-                        DateFormat('dd MMM').format(record.visitDate),
-                        style: const TextStyle(
-                          fontSize: 24,
-                          fontWeight: FontWeight.bold,
+                      subtitle: Text('Time: ${record.time}'),
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.all(16.0),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const Text(
+                                'Reasons:',
+                                style: TextStyle(fontWeight: FontWeight.bold),
+                              ),
+                              ...record.reasons.map((reason) => Padding(
+                                    padding: const EdgeInsets.only(left: 16, top: 4),
+                                    child: Text('• $reason'),
+                                  )),
+                              const SizedBox(height: 16),
+                              const Text(
+                                'Medicines:',
+                                style: TextStyle(fontWeight: FontWeight.bold),
+                              ),
+                              ...record.medicines.map((medicine) => Padding(
+                                    padding: const EdgeInsets.only(left: 16, top: 4),
+                                    child: Text(
+                                      '• ${medicine.name} - ${medicine.dosage} (${medicine.frequency})',
+                                    ),
+                                  )),
+                            ],
+                          ),
                         ),
-                      ),
-                      Text(
-                        record.visitTime,
-                        style: const TextStyle(fontSize: 16),
-                      ),
-                      const Divider(),
-                      if (record.reasons.isNotEmpty) ...[
-                        const Text(
-                          'Reasons:',
-                          style: TextStyle(fontWeight: FontWeight.bold),
-                        ),
-                        ...record.reasons.map((reason) => Text('• $reason')),
                       ],
-                      if (record.medicines.isNotEmpty) ...[
-                        const SizedBox(height: 8),
-                        const Text(
-                          'Medicines:',
-                          style: TextStyle(fontWeight: FontWeight.bold),
-                        ),
-                        ...record.medicines.entries.map(
-                          (entry) => Text('• ${entry.key}: ${entry.value}'),
-                        ),
-                      ] else ...[
-                        const SizedBox(height: 8),
-                        const Text('No medicines recorded'),
-                      ],
-                    ],
-                  ),
-                ),
+                    ),
+                  );
+                },
               );
             },
           );

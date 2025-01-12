@@ -11,7 +11,10 @@ import 'package:user_profile_management/page/Admin_LiveQueueManagement.dart';
 import 'package:user_profile_management/page/Admin_LocationDistress.dart';
 import 'package:user_profile_management/page/User_EmergencyCall.dart';
 import 'package:user_profile_management/page/Admin_ReportNMedicial.dart';
-
+import 'package:user_profile_management/page/Admin_EditMedicalRecord.dart';
+import 'dart:developer';
+import 'package:url_launcher/url_launcher.dart' as url_launcher;
+import 'package:user_profile_management/back-end/firebase_ReadNumber.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -27,12 +30,50 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
   bool _isLoading = true;
   final Map<int, Widget> _cachedTabs = {};
   late Stream<DocumentSnapshot> _userStream;
+  
+  // Add new variables for phone functionality
+  bool _showConfirm = false;
+  String _phoneNum = "";
+  final ReadPhoneNum _readPhoneNum = ReadPhoneNum.instance;
 
   @override
   void initState() {
     super.initState();
     _tabController = TabController(length: 5, vsync: this);
     _initializeUserStream();
+    _fetchPhoneNumber(); // Add this line
+  }
+
+  // Add phone-related methods
+  void _fetchPhoneNumber() async {
+    try {
+      final phoneNumber = await _readPhoneNum.fetchPhoneNumber();
+      setState(() {
+        _phoneNum = phoneNumber;
+      });
+    } catch (error) {
+      _showErrorSnackBar('Failed to fetch phone number');
+    }
+  }
+
+  void _showErrorSnackBar(String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(message),
+        backgroundColor: Colors.red,
+      ),
+    );
+  }
+
+  void executePhoneCall() async {
+    final url = Uri(scheme: 'tel', path: _phoneNum);
+
+    if(await url_launcher.canLaunchUrl(url)) {
+      await url_launcher.launchUrl(url);
+    }
+    else {
+      log("Could not launch phone call");
+    }
   }
 
   void _initializeUserStream() {
@@ -126,27 +167,6 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
             physics: const NeverScrollableScrollPhysics(),
             children: _isAdmin ? _buildAdminTabs() : _buildUserTabs(),
           ),
-          if (_showFABOptions && !_isAdmin)
-            Positioned(
-              right: 16,
-              bottom: 80,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: [
-                  _buildFABOption(
-                    icon: Icons.call,
-                    label: 'Emergency Call',
-                    onTap: () {
-                       Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => const EmergencyCall()),
-                        //MaterialPageRoute(builder: (context) => const HomeTab()),
-                      );
-                    },
-                  ),
-                ],
-              ),
-            ),
         ],
       ),
       bottomNavigationBar: Material(
@@ -164,17 +184,76 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
           tabs: _isAdmin ? _buildAdminTabIcons() : _buildUserTabIcons(),
         ),
       ),
-      floatingActionButton: !_isAdmin
-          ? FloatingActionButton(
-              onPressed: () {
-                setState(() {
-                  _showFABOptions = !_showFABOptions;
-                });
-              },
-              backgroundColor: firstcolour,
-              child: const Icon(Icons.add, color: Colors.white),
-            )
-          : null,
+      
+      /*floatingActionButton: !_isAdmin
+        ? Stack(
+            children: [
+              if (_showConfirm)
+                Positioned(
+                  right: 80,
+                  bottom: 16,
+                  child: Container(
+                    padding: const EdgeInsets.all(16),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(8),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.grey.withOpacity(0.5),
+                          spreadRadius: 2,
+                          blurRadius: 5,
+                          offset: const Offset(0, 3),
+                        ),
+                      ],
+                    ),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        const Text('Are you sure you want to make a phone call?'),
+                        const SizedBox(height: 16),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            TextButton(
+                              onPressed: () {
+                                setState(() {
+                                  _showConfirm = false;
+                                });
+                              },
+                              child: const Text('Cancel'),
+                            ),
+                            const SizedBox(width: 8),
+                            ElevatedButton(
+                              onPressed: () {
+                                executePhoneCall();
+                                setState(() {
+                                  _showConfirm = false;
+                                });
+                              },
+                              child: const Text('Call'),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              Positioned(
+                right: 16,
+                bottom: 16,
+                child: FloatingActionButton(
+                  onPressed: () {
+                    setState(() {
+                      _showConfirm = true;
+                    });
+                  },
+                  backgroundColor: firstcolour,
+                  child: const Icon(Icons.phone, color: Colors.white),
+                ),
+              ),
+            ],
+          )
+        : null,*/
     );
   }
 
@@ -191,7 +270,6 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
     return [
       _getCachedTab(0, () => AdminScreen()),
       _getCachedTab(1, () => const AdminUserManagement()),
-      //_getCachedTab(2, () => const ReportNMedical()),
       _getCachedTab(2, () => const ReportNMedical()),
       _getCachedTab(3, () => const AdminMapPage()),
       _getCachedTab(4, () => const SettingsPage()),
