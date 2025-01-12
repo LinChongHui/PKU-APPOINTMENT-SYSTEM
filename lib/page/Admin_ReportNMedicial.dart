@@ -1,6 +1,6 @@
-/*import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:user_profile_management/page/Admin_HealthReportManagement.dart';
-import 'package:user_profile_management/page/Admin_MedicalHistory.dart'; // Import the file for AdminHealthReportsScreen
+import 'package:user_profile_management/page/Admin_MedicalRecord.dart'; // Import the file for AdminHealthReportsScreen
 
 class ReportNMedical extends StatelessWidget {
   const ReportNMedical({super.key});
@@ -18,12 +18,12 @@ class ReportNMedical extends StatelessWidget {
           children: [
             ElevatedButton(
               onPressed: () {
-                /*Navigator.push(
+                Navigator.push(
                   context,
                   MaterialPageRoute(
                     builder: (context) => const AdminMedicalHistory(),
                   ),
-                );*/
+                );
               },
               child: const Text('Go to Admin Medical History'),
               style: ElevatedButton.styleFrom(backgroundColor: Colors.teal),
@@ -46,4 +46,4 @@ class ReportNMedical extends StatelessWidget {
       ),
     );
   }
-}*/
+}

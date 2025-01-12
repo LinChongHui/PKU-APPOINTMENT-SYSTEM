@@ -1,7 +1,7 @@
-/*import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import '../medicalrecord/medical_record.dart';
-import '../medicalrecord/medical_record_service.dart';
+import 'package:user_profile_management/back-end/firebase_MedicalRecord.dart';
+import 'package:user_profile_management/page/User_MedicalRecordService.dart';
 
 class EditMedicalRecord extends StatefulWidget {
   final MedicalRecord? record;
@@ -237,4 +237,3 @@ class _EditMedicalRecordState extends State<EditMedicalRecord> {
     }
   }
 }
-*/

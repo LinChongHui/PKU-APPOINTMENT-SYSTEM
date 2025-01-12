@@ -4,10 +4,11 @@ import 'package:user_profile_management/page/Theme.dart';
 import 'package:user_profile_management/page/User_BookingAppoitnment.dart';
 import 'package:user_profile_management/page/User_AppointmentList.dart';
 import 'package:user_profile_management/page/User_LiveQueue_user.dart';
-import 'package:user_profile_management/page/User_MedicalHistory.dart';
+import 'package:user_profile_management/page/User_MedicalRecord.dart';
 import 'package:user_profile_management/page/User_LocationDistress.dart';
 import 'package:user_profile_management/page/Widget_outside_appbar.dart';
-
+import 'package:user_profile_management/page/User_HealthReport.dart';
+import 'package:user_profile_management/page/User_MedicalRecord.dart';
 
 class HomeTab extends StatelessWidget {
   const HomeTab({Key? key}) : super(key: key);
@@ -58,14 +59,14 @@ class HomeTab extends StatelessWidget {
                   context,
                   Icons.health_and_safety,
                   'Health Records',
-                  const AppointmentHistoryScreen(),
+                  const UserHealthReportsScreen(),
                 ),
                 _buildGridItem(
                   context,
                   Icons.medical_information,
                   'Medical Records',
-                  const AppointmentHistoryScreen(),
-                  //MedicalRecordsPage(),
+                  //const AppointmentHistoryScreen(),
+                  UserMedicalHistory(),
                 ),
               ],
             ),

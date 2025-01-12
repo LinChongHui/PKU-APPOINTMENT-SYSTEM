@@ -12,6 +12,7 @@ import 'package:user_profile_management/page/Admin_LocationDistress.dart';
 import 'package:user_profile_management/page/User_EmergencyCall.dart';
 import 'package:user_profile_management/page/Admin_ReportNMedicial.dart';
 
+
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
 
@@ -139,6 +140,7 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
                        Navigator.push(
                         context,
                         MaterialPageRoute(builder: (context) => const EmergencyCall()),
+                        //MaterialPageRoute(builder: (context) => const HomeTab()),
                       );
                     },
                   ),
@@ -190,7 +192,7 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
       _getCachedTab(0, () => AdminScreen()),
       _getCachedTab(1, () => const AdminUserManagement()),
       //_getCachedTab(2, () => const ReportNMedical()),
-      _getCachedTab(2, () => const Center()),
+      _getCachedTab(2, () => const ReportNMedical()),
       _getCachedTab(3, () => const AdminMapPage()),
       _getCachedTab(4, () => const SettingsPage()),
     ];

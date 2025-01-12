@@ -1,71 +1,93 @@
-/*
-import 'dart:async';
-import 'dart:convert';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'medical_record.dart';
+import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+import 'package:user_profile_management/page/User_MedicalRecordService.dart';
+import 'package:user_profile_management/back-end/firebase_MedicalRecord.dart';
 
-class MedicalRecordService {
-  static final MedicalRecordService _instance =
-      MedicalRecordService._internal();
-  factory MedicalRecordService() => _instance;
+class UserMedicalHistory extends StatelessWidget {
+  final _recordService = MedicalRecordService();
 
-  final List<MedicalRecord> _records = [];
-  final _recordsController = StreamController<List<MedicalRecord>>.broadcast();
-  final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
+  UserMedicalHistory({super.key});
 
-  MedicalRecordService._internal() {
-    _loadRecords();
-  }
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Medical History'),
+        backgroundColor: Colors.teal,
+      ),
+      body: StreamBuilder<List<MedicalRecord>>(
+        stream: _recordService.recordsStream,
+        initialData: _recordService.getRecords(),
+        builder: (context, snapshot) {
+          if (snapshot.hasError) {
+            return Center(child: Text('Error: ${snapshot.error}'));
+          }
 
-  Stream<List<MedicalRecord>> get recordsStream => _recordsController.stream;
+          final records = snapshot.data ?? [];
 
-  Future<void> _loadRecords() async {
-    final preferences = await _prefs;
-    final recordsJson = preferences.getStringList('medical_records') ?? [];
+          if (records.isEmpty) {
+            return const Center(child: Text('No medical records found'));
+          }
 
-    _records.clear(); // Clear existing records before loading
-    _records.addAll(
-      recordsJson.map((json) => MedicalRecord.fromMap(jsonDecode(json))),
+          return ListView.builder(
+            padding: const EdgeInsets.all(16),
+            itemCount: records.length,
+            itemBuilder: (context, index) {
+              final record = records[index];
+
+              return Card(
+                child: Padding(
+                  padding: const EdgeInsets.all(16),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Visit On',
+                        style: TextStyle(
+                          color: Colors.grey[600],
+                          fontSize: 12,
+                        ),
+                      ),
+                      Text(
+                        DateFormat('dd MMM').format(record.visitDate),
+                        style: const TextStyle(
+                          fontSize: 24,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      Text(
+                        record.visitTime,
+                        style: const TextStyle(fontSize: 16),
+                      ),
+                      const Divider(),
+                      if (record.reasons.isNotEmpty) ...[
+                        const Text(
+                          'Reasons:',
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                        ...record.reasons.map((reason) => Text('• $reason')),
+                      ],
+                      if (record.medicines.isNotEmpty) ...[
+                        const SizedBox(height: 8),
+                        const Text(
+                          'Medicines:',
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                        ...record.medicines.entries.map(
+                          (entry) => Text('• ${entry.key}: ${entry.value}'),
+                        ),
+                      ] else ...[
+                        const SizedBox(height: 8),
+                        const Text('No medicines recorded'),
+                      ],
+                    ],
+                  ),
+                ),
+              );
+            },
+          );
+        },
+      ),
     );
-
-    _records.sort((a, b) => b.visitDate.compareTo(a.visitDate));
-    _recordsController.add(_records);
-  }
-
-  Future<void> addRecord(MedicalRecord record) async {
-    _records.add(record);
-    await _saveRecords();
-  }
-
-  Future<void> updateRecord(MedicalRecord record) async {
-    final index = _records.indexWhere((r) => r.id == record.id);
-    if (index != -1) {
-      _records[index] = record;
-      await _saveRecords();
-    }
-  }
-
-  Future<void> deleteRecord(String id) async {
-    _records.removeWhere((record) => record.id == id);
-    await _saveRecords();
-  }
-
-  Future<void> _saveRecords() async {
-    _records.sort((a, b) => b.visitDate.compareTo(a.visitDate));
-    _recordsController.add(_records);
-
-    final preferences = await _prefs;
-    final recordsJson =
-        _records.map((record) => jsonEncode(record.toMap())).toList();
-    await preferences.setStringList('medical_records', recordsJson);
-  }
-
-  List<MedicalRecord> getRecords() {
-    return List.unmodifiable(_records);
-  }
-
-  void dispose() {
-    _recordsController.close();
   }
 }
-*/

@@ -1,7 +1,7 @@
-/*import 'dart:async';
+import 'dart:async';
 import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'medical_record.dart';
+import 'package:user_profile_management/back-end/firebase_MedicalRecord.dart';
 
 class MedicalRecordService {
   static final MedicalRecordService _instance =
@@ -67,4 +67,3 @@ class MedicalRecordService {
     _recordsController.close();
   }
 }
-*/

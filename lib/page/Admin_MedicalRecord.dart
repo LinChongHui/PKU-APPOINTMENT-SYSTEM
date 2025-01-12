@@ -1,8 +1,8 @@
-/*import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:user_profile_management/page/Admin_EditMedicalRecord.dart';
 import 'package:user_profile_management/back-end/firebase_MedicalRecord.dart';
-import 'package:user_profile_management/page/User_MedicalRecord.dart';
+import 'package:user_profile_management/page/User_MedicalRecordService.dart';
+import 'package:user_profile_management/page/Admin_EditMedicalRecord.dart';
 
 class AdminMedicalHistory extends StatefulWidget {
   const AdminMedicalHistory({super.key});
@@ -112,4 +112,3 @@ class _AdminMedicalHistoryState extends State<AdminMedicalHistory> {
     );
   }
 }
-*/
