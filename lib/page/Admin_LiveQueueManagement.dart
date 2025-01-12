@@ -7,23 +7,42 @@ class AdminScreen extends StatefulWidget {
 }
 
 class _AdminScreenState extends State<AdminScreen> {
-  final TextEditingController _currentNumberController =
-      TextEditingController();
-  final QueueService _queueService = QueueService(); // Instance of the service
+  final QueueService _queueService = QueueService();
+  int? _currentNumber;
+  List<int> _queueNumbers = [];
 
-  void _updateCurrentNumber() async {
-    if (_currentNumberController.text.isNotEmpty) {
-      int newNumber = int.parse(_currentNumberController.text);
+  @override
+  void initState() {
+    super.initState();
+    _listenToQueueUpdates();
+  }
 
+  void _listenToQueueUpdates() {
+    _queueService.listenToCurrentNumber().listen((currentNumber) {
+      setState(() {
+        _currentNumber = currentNumber;
+      });
+    });
+
+    _queueService.listenToQueue().listen((queueNumbers) {
+      setState(() {
+        _queueNumbers = queueNumbers;
+      });
+    });
+  }
+
+  void _callNextNumber() async {
+    if (_queueNumbers.isNotEmpty) {
+      int nextNumber = _queueNumbers[0];
       try {
-        await _queueService.updateCurrentNumber(newNumber);
-        _currentNumberController.clear();
+        await _queueService.updateCurrentNumber(nextNumber);
+        await _queueService.removeFromQueue(nextNumber);
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Current number updated successfully!')),
+          SnackBar(content: Text('Called number $nextNumber')),
         );
       } catch (e) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Failed to update current number')),
+          SnackBar(content: Text('Failed to call next number')),
         );
       }
     }
@@ -34,30 +53,88 @@ class _AdminScreenState extends State<AdminScreen> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.teal,
-        iconTheme: IconThemeData(color: Colors.white), // Back arrow color
+        iconTheme: IconThemeData(color: Colors.white),
         title: Text(
-          'Live Queue',
-          style: TextStyle(color: Colors.white), // Title color
+          'Queue Management',
+          style: TextStyle(color: Colors.white),
         ),
-        leading: Container(), // Removes the back arrow button
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           children: [
-            TextField(
-              controller: _currentNumberController,
-              keyboardType: TextInputType.number,
-              decoration: InputDecoration(
-                labelText: 'Enter Current Number',
-                border: OutlineInputBorder(),
+            Card(
+              elevation: 4,
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  children: [
+                    Text(
+                      'Current Number',
+                      style: TextStyle(
+                        fontSize: 24,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    Text(
+                      '${_currentNumber ?? "No active number"}',
+                      style: TextStyle(
+                        fontSize: 36,
+                        color: Colors.teal,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    SizedBox(height: 10),
+                    ElevatedButton(
+                      onPressed:
+                          _queueNumbers.isNotEmpty ? _callNextNumber : null,
+                      child: Text('Call Next Number'),
+                      style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.teal),
+                    ),
+                  ],
+                ),
               ),
             ),
-            SizedBox(height: 10),
-            ElevatedButton(
-              onPressed: _updateCurrentNumber,
-              child: Text('Update Current Number'),
-              style: ElevatedButton.styleFrom(backgroundColor: Colors.teal),
+            SizedBox(height: 20),
+            Expanded(
+              child: Card(
+                elevation: 4,
+                child: Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      Text(
+                        'Waiting Queue',
+                        style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                      SizedBox(height: 10),
+                      Expanded(
+                        child: ListView.builder(
+                          itemCount: _queueNumbers.length,
+                          itemBuilder: (context, index) {
+                            return ListTile(
+                              leading: CircleAvatar(
+                                backgroundColor: Colors.teal,
+                                child: Text('${index + 1}'),
+                              ),
+                              title: Text(
+                                'Token #${_queueNumbers[index]}',
+                                style: TextStyle(fontSize: 16),
+                              ),
+                            );
+                          },
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
             ),
           ],
         ),
