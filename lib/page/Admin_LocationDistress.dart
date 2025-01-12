@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:http/http.dart' as http;
-import 'dart:convert';
 import 'package:location/location.dart';
 import 'package:user_profile_management/back-end/firebase_RouteService.dart';
 
@@ -47,7 +45,7 @@ class _AdminMapPageState extends State<AdminMapPage> {
         .snapshots()
         .listen((snapshot) {
       List<Marker> markers = [];
-      
+
       for (var doc in snapshot.docs) {
         final data = doc.data();
         final lat = data['latitude'] as double;
@@ -113,9 +111,10 @@ class _AdminMapPageState extends State<AdminMapPage> {
       _isLoadingRoute = true;
     });
 
-    final currentLatLng = LatLng(_currentLocation!.latitude!, _currentLocation!.longitude!);
+    final currentLatLng =
+        LatLng(_currentLocation!.latitude!, _currentLocation!.longitude!);
     final points = await RouteService.getRoute(currentLatLng, destination);
-    
+
     setState(() {
       _routePoints = points;
       _isLoadingRoute = false;

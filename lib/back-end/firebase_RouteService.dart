@@ -16,7 +16,8 @@ class RouteService {
       if (response.statusCode == 200) {
         final data = json.decode(response.body);
         if (data['routes'] != null && data['routes'].isNotEmpty) {
-          final coordinates = data['routes'][0]['geometry']['coordinates'] as List;
+          final coordinates =
+              data['routes'][0]['geometry']['coordinates'] as List;
           return coordinates
               .map((coord) => LatLng(coord[1].toDouble(), coord[0].toDouble()))
               .toList();

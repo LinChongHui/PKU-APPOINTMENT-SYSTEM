@@ -3,8 +3,6 @@ import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:location/location.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:user_profile_management/page/Widget_inside_appbar_backarrow.dart';
-import 'package:user_profile_management/page/Theme.dart';
 import 'package:user_profile_management/back-end/firebase_RouteService.dart';
 
 const DESTINATION = LatLng(1.55934, 103.627364);
@@ -23,7 +21,7 @@ class _LocationMapPageState extends State<LocationMapPage> {
   bool _isLoading = false;
   List<LatLng> _routePoints = [];
   bool _isLoadingRoute = false;
-  bool _showRoute = false;  // New flag to control route visibility
+  bool _showRoute = false; // New flag to control route visibility
 
   @override
   void initState() {
@@ -55,7 +53,7 @@ class _LocationMapPageState extends State<LocationMapPage> {
           _currentLocation = currentLocation;
         });
         if (_showRoute) {
-          _updateRoute();  // Only update route if it's visible
+          _updateRoute(); // Only update route if it's visible
         }
       });
     } catch (e) {
@@ -70,9 +68,10 @@ class _LocationMapPageState extends State<LocationMapPage> {
       _isLoadingRoute = true;
     });
 
-    final currentLatLng = LatLng(_currentLocation!.latitude!, _currentLocation!.longitude!);
+    final currentLatLng =
+        LatLng(_currentLocation!.latitude!, _currentLocation!.longitude!);
     final points = await RouteService.getRoute(currentLatLng, DESTINATION);
-    
+
     setState(() {
       _routePoints = points;
       _isLoadingRoute = false;
@@ -83,7 +82,7 @@ class _LocationMapPageState extends State<LocationMapPage> {
     setState(() {
       _showRoute = !_showRoute;
     });
-    
+
     if (_showRoute) {
       await _updateRoute();
     } else {
@@ -125,9 +124,8 @@ class _LocationMapPageState extends State<LocationMapPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const PreferredSize(
-        preferredSize: Size.fromHeight(kToolbarHeight),
-        child: AppBarAndBackArrow(title: ' Location Map'),
+      appBar: AppBar(
+        title: const Text('Location Map'),
       ),
       body: _currentLocation == null
           ? const Center(child: CircularProgressIndicator())
@@ -148,7 +146,9 @@ class _LocationMapPageState extends State<LocationMapPage> {
                           'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
                       subdomains: const ['a', 'b', 'c'],
                     ),
-                    if (_showRoute && _routePoints.isNotEmpty)  // Only show route if _showRoute is true
+                    if (_showRoute &&
+                        _routePoints
+                            .isNotEmpty) // Only show route if _showRoute is true
                       PolylineLayer(
                         polylines: [
                           Polyline(
@@ -200,7 +200,8 @@ class _LocationMapPageState extends State<LocationMapPage> {
                           ? const SizedBox(
                               width: 24,
                               height: 24,
-                              child: CircularProgressIndicator(color: Colors.white),
+                              child: CircularProgressIndicator(
+                                  color: Colors.white),
                             )
                           : Text(_showRoute ? 'Hide Route' : 'Show Route'),
                       icon: Icon(_showRoute ? Icons.hide_source : Icons.route),
