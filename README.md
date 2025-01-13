@@ -1,6 +1,6 @@
 # PKU APPOINTMENT APPLICATION
 
-## FRONT-END CODING 
+## PROJECT CODING 
 ### Member 1: Lin Chong Hui
 Sprint 1:
 <table>
