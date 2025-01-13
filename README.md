@@ -18,7 +18,7 @@ Sprint 1:
 <th> Home.dart
 <th> Home page of application
 <th><a href="lib/page/User_Home.dart">click me</a>
-<the> None
+<th> None
   
 </tr>
 
