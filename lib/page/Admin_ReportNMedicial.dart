@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:user_profile_management/page/Admin_EditMedicalRecord.dart';
 import 'package:user_profile_management/page/Admin_HealthReportManagement.dart';
+import 'package:user_profile_management/page/Theme.dart';
+import 'package:user_profile_management/page/Widget_outside_appbar.dart';
 
 class ReportNMedical extends StatelessWidget {
   const ReportNMedical({super.key});
@@ -8,10 +10,9 @@ class ReportNMedical extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Admin Panel'),
-        backgroundColor: Colors.teal,
-        centerTitle: true,
+       appBar: const PreferredSize(
+        preferredSize: Size.fromHeight(kToolbarHeight),
+        child: WidgetOutsideAppbar(title: 'Admin Panel', logoAsset: '',),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -42,7 +43,7 @@ class ReportNMedical extends StatelessWidget {
                         padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 20),
                         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
                       ),
-                      child: const Text('Admin Medical History', style: TextStyle(fontSize: 16)),
+                      child: const Text('Admin Medical History', style: TextStyle(fontSize: 16,color: fivethcolour)),
                     ),
                   ],
                 ),
@@ -72,7 +73,7 @@ class ReportNMedical extends StatelessWidget {
                         padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 20),
                         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
                       ),
-                      child: const Text('Admin Health Reports', style: TextStyle(fontSize: 16)),
+                      child: const Text('Admin Health Reports', style: TextStyle(fontSize: 16,color: fivethcolour)),
                     ),
                   ],
                 ),

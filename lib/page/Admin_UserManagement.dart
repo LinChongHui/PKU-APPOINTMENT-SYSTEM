@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'User_info_display.dart'; // Import the UserInfoDisplay widget
 import 'package:user_profile_management/page/Theme.dart';
+import 'package:user_profile_management/page/Widget_outside_appbar.dart';
 
 class AdminUserManagement extends StatefulWidget {
   const AdminUserManagement({Key? key}) : super(key: key);
@@ -14,10 +15,9 @@ class _AdminUserManagementState extends State<AdminUserManagement> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        automaticallyImplyLeading: false,
-        title: const Text('User Management', style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold, color: Colors.white)),
-        backgroundColor: firstcolour,
+      appBar: const PreferredSize(
+        preferredSize: Size.fromHeight(kToolbarHeight),
+        child: WidgetOutsideAppbar(title: 'User Management', logoAsset: '',),
       ),
       body: Padding(
         padding: const EdgeInsets.all(8.0),
@@ -52,13 +52,13 @@ class _AdminUserManagementState extends State<AdminUserManagement> {
                       Row(
                         children: [
                           IconButton(
-                            icon: const Icon(Icons.info, color: secondcolour),
+                            icon: const Icon(Icons.info, color: Colors.green),
                             onPressed: () {
                               _showInfoDialog(context, personalInfo, uid);
                             },
                           ),
                           IconButton(
-                            icon: const Icon(Icons.edit, color: thirdcolour),
+                            icon: const Icon(Icons.edit, color: sixthcolour),
                             onPressed: () {
                               _showUpdateDialog(context, uid, firstName, lastName);
                             },

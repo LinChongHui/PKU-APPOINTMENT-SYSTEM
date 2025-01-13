@@ -12,12 +12,11 @@ class AdminHealthReportsScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Health Reports Admin'),
-        backgroundColor: Colors.teal,
+        backgroundColor: const Color(0xFF00897B),
         actions: [
           IconButton(
             icon: const Icon(Icons.refresh),
             onPressed: () {
-              // Manually refresh the data
               FirebaseFirestore.instance.collection('health_reports').get();
             },
           ),
@@ -25,7 +24,7 @@ class AdminHealthReportsScreen extends StatelessWidget {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () => _showAddReportDialog(context),
-        backgroundColor: Colors.teal,
+        backgroundColor: const Color(0xFF00897B),
         child: const Icon(Icons.add),
       ),
       body: _buildReportsList(),
@@ -40,18 +39,11 @@ class AdminHealthReportsScreen extends StatelessWidget {
           .snapshots(),
       builder: (context, snapshot) {
         if (snapshot.hasError) {
-          return Center(
-            child: Text(
-              'Error: ${snapshot.error}',
-              style: const TextStyle(color: Colors.red),
-            ),
-          );
+          return Center(child: Text('Error: ${snapshot.error}'));
         }
 
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Center(
-            child: CircularProgressIndicator(),
-          );
+          return const Center(child: CircularProgressIndicator());
         }
 
         final reports = snapshot.data?.docs ?? [];
@@ -85,32 +77,42 @@ class AdminHealthReportsScreen extends StatelessWidget {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text(
-                          DateFormat('MMM dd, yyyy').format(report.date),
-                          style: const TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 16,
-                          ),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'Matric No: ${data['matricNumber'] ?? 'N/A'}',
+                              style: const TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 16,
+                                color: Color(0xFF00897B),
+                              ),
+                            ),
+                            const SizedBox(height: 4),
+                            Text(
+                              DateFormat('MMM dd, yyyy').format(report.date),
+                              style: TextStyle(
+                                color: Colors.grey[600],
+                                fontSize: 14,
+                              ),
+                            ),
+                          ],
                         ),
                         Row(
                           children: [
                             IconButton(
-                              icon: const Icon(Icons.edit, color: Colors.blue),
-                              onPressed: () => _showEditReportDialog(
-                                context,
-                                report,
-                              ),
+                              icon: const Icon(Icons.edit, color: Color(0xFF00897B)),
+                              onPressed: () => _showEditReportDialog(context, report, data['matricNumber']),
                             ),
                             IconButton(
                               icon: const Icon(Icons.delete, color: Colors.red),
-                              onPressed: () =>
-                                  _deleteReport(context, report.id),
+                              onPressed: () => _deleteReport(context, report.id),
                             ),
                           ],
                         ),
                       ],
                     ),
-                    const SizedBox(height: 8),
+                    const Divider(),
                     Text(
                       'Consultant: ${report.consultantName}',
                       style: const TextStyle(
@@ -133,117 +135,148 @@ class AdminHealthReportsScreen extends StatelessWidget {
     );
   }
 
-  Future<void> _showAddReportDialog(BuildContext context) async {
+   Future<void> _showAddReportDialog(BuildContext context) async {
+    final matricController = TextEditingController();
     final consultantController = TextEditingController();
     final summaryController = TextEditingController();
     DateTime selectedDate = DateTime.now();
+    String? errorMessage;
 
     await showDialog(
       context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('Add New Health Report'),
-        content: SingleChildScrollView(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              ListTile(
-                title: Text(
-                  'Date: ${DateFormat('MMM dd, yyyy').format(selectedDate)}',
-                ),
-                trailing: const Icon(Icons.calendar_today),
-                onTap: () async {
-                  final DateTime? picked = await showDatePicker(
-                    context: context,
-                    initialDate: selectedDate,
-                    firstDate: DateTime(2000),
-                    lastDate: DateTime(2101),
-                  );
-                  if (picked != null && picked != selectedDate) {
-                    selectedDate = picked;
-                  }
-                },
-              ),
-              TextField(
-                controller: consultantController,
-                decoration: const InputDecoration(
-                  labelText: 'Consultant Name',
-                  icon: Icon(Icons.person),
-                ),
-              ),
-              const SizedBox(height: 16),
-              TextField(
-                controller: summaryController,
-                decoration: const InputDecoration(
-                  labelText: 'Report Summary',
-                  icon: Icon(Icons.description),
-                ),
-                maxLines: 3,
-              ),
-            ],
-          ),
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('Cancel'),
-          ),
-          ElevatedButton(
-            onPressed: () async {
-              if (consultantController.text.isEmpty ||
-                  summaryController.text.isEmpty) {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(
-                    content: Text('Please fill in all fields'),
-                    backgroundColor: Colors.red,
+      builder: (context) => StatefulBuilder(
+        builder: (context, setState) => AlertDialog(
+          title: const Text('Add New Health Report'),
+          content: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                TextField(
+                  controller: matricController,
+                  decoration: InputDecoration(
+                    labelText: 'Matric Number',
+                    icon: const Icon(Icons.badge),
+                    errorText: errorMessage,
                   ),
-                );
-                return;
-              }
-
-              try {
-                await FirebaseFirestore.instance
-                    .collection('health_reports')
-                    .add({
-                  'date': selectedDate.toIso8601String(),
-                  'consultantName': consultantController.text,
-                  'reportSummary': summaryController.text,
-                });
-
-                if (context.mounted) {
-                  Navigator.pop(context);
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      content: Text('Report added successfully'),
-                      backgroundColor: Colors.green,
-                    ),
-                  );
-                }
-              } catch (e) {
-                if (context.mounted) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text('Error: $e'),
-                      backgroundColor: Colors.red,
-                    ),
-                  );
-                }
-              }
-            },
-            child: const Text('Add'),
+                  onChanged: (_) => setState(() => errorMessage = null),
+                ),
+                const SizedBox(height: 16),
+                ListTile(
+                  title: Text(
+                    'Date: ${DateFormat('MMM dd, yyyy').format(selectedDate)}',
+                  ),
+                  trailing: const Icon(Icons.calendar_today),
+                  onTap: () async {
+                    final DateTime? picked = await showDatePicker(
+                      context: context,
+                      initialDate: selectedDate,
+                      firstDate: DateTime(2000),
+                      lastDate: DateTime(2101),
+                    );
+                    if (picked != null) {
+                      setState(() => selectedDate = picked);
+                    }
+                  },
+                ),
+                TextField(
+                  controller: consultantController,
+                  decoration: const InputDecoration(
+                    labelText: 'Consultant Name',
+                    icon: Icon(Icons.person),
+                  ),
+                ),
+                const SizedBox(height: 16),
+                TextField(
+                  controller: summaryController,
+                  decoration: const InputDecoration(
+                    labelText: 'Report Summary',
+                    icon: Icon(Icons.description),
+                  ),
+                  maxLines: 3,
+                ),
+              ],
+            ),
           ),
-        ],
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text('Cancel'),
+            ),
+            ElevatedButton(
+              onPressed: () async {
+                // Validate matric number
+                try {
+                  final userDoc = await FirebaseFirestore.instance
+                      .collection('users')
+                      .where('personalInfo.matricNumber', isEqualTo: matricController.text)
+                      .get();
+
+                  if (userDoc.docs.isEmpty) {
+                    setState(() => errorMessage = 'Invalid matric number');
+                    return;
+                  }
+
+                  if (consultantController.text.isEmpty ||
+                      summaryController.text.isEmpty) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text('Please fill in all fields'),
+                        backgroundColor: Colors.red,
+                      ),
+                    );
+                    return;
+                  }
+
+                  await FirebaseFirestore.instance
+                      .collection('health_reports')
+                      .add({
+                    'matricNumber': matricController.text,
+                    'date': selectedDate.toIso8601String(),
+                    'consultantName': consultantController.text,
+                    'reportSummary': summaryController.text,
+                  });
+
+                  if (context.mounted) {
+                    Navigator.pop(context);
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text('Report added successfully'),
+                        backgroundColor: Colors.green,
+                      ),
+                    );
+                  }
+                } catch (e) {
+                  if (context.mounted) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text('Error: $e'),
+                        backgroundColor: Colors.red,
+                      ),
+                    );
+                  }
+                }
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: const Color(0xFF00897B),
+              ),
+              child: const Text('Add'),
+            ),
+          ],
+        ),
       ),
     );
   }
 
-  Future<void> _showEditReportDialog(
+ Future<void> _showEditReportDialog(
     BuildContext context,
     HealthReport report,
+    String? matricNumber,
   ) async {
-    final consultantController =
-        TextEditingController(text: report.consultantName);
+    final matricController = TextEditingController(text: matricNumber);
+    final consultantController = TextEditingController(text: report.consultantName);
     final summaryController = TextEditingController(text: report.reportSummary);
     DateTime selectedDate = report.date;
+    String? errorMessage;
 
     await showDialog(
       context: context,
@@ -344,7 +377,7 @@ class AdminHealthReportsScreen extends StatelessWidget {
     );
   }
 
-  Future<void> _deleteReport(BuildContext context, String reportId) async {
+   Future<void> _deleteReport(BuildContext context, String reportId) async {
     final bool? confirm = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
@@ -357,7 +390,9 @@ class AdminHealthReportsScreen extends StatelessWidget {
           ),
           TextButton(
             onPressed: () => Navigator.pop(context, true),
-            style: TextButton.styleFrom(foregroundColor: Colors.red),
+            style: TextButton.styleFrom(
+              foregroundColor: Colors.red,
+            ),
             child: const Text('Delete'),
           ),
         ],

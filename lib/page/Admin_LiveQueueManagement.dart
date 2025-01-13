@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:user_profile_management/back-end/firebase_AdminUpdateQueue.dart';
+import 'package:user_profile_management/page/Theme.dart';
+import 'package:user_profile_management/page/Widget_outside_appbar.dart';
 
 class AdminScreen extends StatefulWidget {
   @override
@@ -51,13 +53,9 @@ class _AdminScreenState extends State<AdminScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.teal,
-        iconTheme: IconThemeData(color: Colors.white),
-        title: Text(
-          'Queue Management',
-          style: TextStyle(color: Colors.white),
-        ),
+     appBar: const PreferredSize(
+        preferredSize: Size.fromHeight(kToolbarHeight),
+        child: WidgetOutsideAppbar(title: 'Queue Management', logoAsset: '',),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -69,7 +67,7 @@ class _AdminScreenState extends State<AdminScreen> {
                 padding: const EdgeInsets.all(16.0),
                 child: Column(
                   children: [
-                    Text(
+                    const Text(
                       'Current Number',
                       style: TextStyle(
                         fontSize: 24,
@@ -88,7 +86,7 @@ class _AdminScreenState extends State<AdminScreen> {
                     ElevatedButton(
                       onPressed:
                           _queueNumbers.isNotEmpty ? _callNextNumber : null,
-                      child: Text('Call Next Number'),
+                      child: const Text('Call Next Number',style: TextStyle(color: fivethcolour),),
                       style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.teal),
                     ),
@@ -121,7 +119,7 @@ class _AdminScreenState extends State<AdminScreen> {
                             return ListTile(
                               leading: CircleAvatar(
                                 backgroundColor: Colors.teal,
-                                child: Text('${index + 1}'),
+                                child: Text('${index + 1}',style: TextStyle(color: fivethcolour),),
                               ),
                               title: Text(
                                 'Token #${_queueNumbers[index]}',

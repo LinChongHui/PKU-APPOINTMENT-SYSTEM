@@ -4,6 +4,7 @@ import 'package:latlong2/latlong.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:location/location.dart';
 import 'package:user_profile_management/back-end/firebase_RouteService.dart';
+import 'package:user_profile_management/page/Widget_outside_appbar.dart';
 
 class AdminMapPage extends StatefulWidget {
   const AdminMapPage({Key? key}) : super(key: key);
@@ -124,8 +125,9 @@ class _AdminMapPageState extends State<AdminMapPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Admin - Distress Signal Monitor'),
+       appBar: const PreferredSize(
+        preferredSize: Size.fromHeight(kToolbarHeight),
+        child: WidgetOutsideAppbar(title: 'Distress Signal Monitor', logoAsset: '',),
       ),
       body: _currentLocation == null
           ? const Center(child: CircularProgressIndicator())

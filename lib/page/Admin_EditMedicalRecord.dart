@@ -41,22 +41,35 @@ class _AddEditRecordFormState extends State<AddEditRecordForm> {
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('Add Medicine'),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            TextField(
-              controller: _medicineNameController,
-              decoration: const InputDecoration(labelText: 'Medicine Name'),
-            ),
-            TextField(
-              controller: _medicineDosageController,
-              decoration: const InputDecoration(labelText: 'Dosage'),
-            ),
-            TextField(
-              controller: _medicineFrequencyController,
-              decoration: const InputDecoration(labelText: 'Frequency'),
-            ),
-          ],
+        content: SingleChildScrollView(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              TextField(
+                controller: _medicineNameController,
+                decoration: const InputDecoration(
+                  labelText: 'Medicine Name',
+                  border: OutlineInputBorder(),
+                ),
+              ),
+              const SizedBox(height: 8),
+              TextField(
+                controller: _medicineDosageController,
+                decoration: const InputDecoration(
+                  labelText: 'Dosage',
+                  border: OutlineInputBorder(),
+                ),
+              ),
+              const SizedBox(height: 8),
+              TextField(
+                controller: _medicineFrequencyController,
+                decoration: const InputDecoration(
+                  labelText: 'Frequency',
+                  border: OutlineInputBorder(),
+                ),
+              ),
+            ],
+          ),
         ),
         actions: [
           TextButton(
@@ -101,7 +114,6 @@ class _AddEditRecordFormState extends State<AddEditRecordForm> {
     setState(() => _isLoading = true);
 
     try {
-      // Validate matric number exists
       await _validateMatricNumber(_matricNumberController.text);
 
       final record = MedicalRecord(
@@ -114,9 +126,7 @@ class _AddEditRecordFormState extends State<AddEditRecordForm> {
       );
 
       if (widget.record == null) {
-        await FirebaseFirestore.instance
-            .collection('medical_records')
-            .add(record.toMap());
+        await FirebaseFirestore.instance.collection('medical_records').add(record.toMap());
       } else {
         await FirebaseFirestore.instance
             .collection('medical_records')
@@ -136,169 +146,295 @@ class _AddEditRecordFormState extends State<AddEditRecordForm> {
       setState(() => _isLoading = false);
     }
   }
+  final Color primaryColor = const Color(0xFF00897B);
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.record == null ? 'Add Record' : 'Edit Record'),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.save),
-            onPressed: _isLoading ? null : _saveRecord,
-          ),
-        ],
+    return Theme(
+      data: Theme.of(context).copyWith(
+        primaryColor: primaryColor,
+        colorScheme: ColorScheme.fromSeed(
+          seedColor: primaryColor,
+          primary: primaryColor,
+        ),
       ),
-      body: Form(
-        key: _formKey,
-        child: ListView(
-          padding: const EdgeInsets.all(16),
-          children: [
-            TextFormField(
-              controller: _matricNumberController,
-              decoration: const InputDecoration(
-                labelText: 'Matric Number',
-                border: OutlineInputBorder(),
+      child: Scaffold(
+        appBar: AppBar(
+          elevation: 0,
+          backgroundColor: primaryColor,
+          title: Text(
+            widget.record == null ? 'Add Medical Record' : 'Edit Medical Record',
+            style: const TextStyle(fontWeight: FontWeight.w600,color: Colors.white),
+          ),
+          actions: [
+            if (_isLoading)
+              const Padding(
+                padding: EdgeInsets.all(16.0),
+                child: CircularProgressIndicator(color: Colors.white),
+              )
+            else
+              IconButton(
+                icon: const Icon(Icons.save_rounded, color: Colors.white),
+                onPressed: _saveRecord,
+                tooltip: 'Save Record',
               ),
-              validator: (value) {
-                if (value == null || value.isEmpty) {
-                  return 'Please enter matric number';
-                }
-                return null;
-              },
+          ],
+        ),
+        body: Container(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              colors: [
+                primaryColor.withOpacity(0.05),
+                Colors.white,
+              ],
             ),
-            const SizedBox(height: 16),
-            ListTile(
-              title: Text(
-                'Date: ${DateFormat('yyyy-MM-dd').format(_selectedDate)}',
-              ),
-              trailing: const Icon(Icons.calendar_today),
-              onTap: () async {
-                final date = await showDatePicker(
-                  context: context,
-                  initialDate: _selectedDate,
-                  firstDate: DateTime(2000),
-                  lastDate: DateTime.now(),
-                );
-                if (date != null) {
-                  setState(() => _selectedDate = date);
-                }
-              },
-            ),
-            const SizedBox(height: 16),
-            TextFormField(
-              controller: _timeController,
-              decoration: const InputDecoration(
-                labelText: 'Time',
-                border: OutlineInputBorder(),
-              ),
-              validator: (value) {
-                if (value == null || value.isEmpty) {
-                  return 'Please enter time';
-                }
-                return null;
-              },
-            ),
-            const SizedBox(height: 16),
-            // Reasons Section
-            Card(
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const Text(
-                      'Reasons',
-                      style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                      ),
+          ),
+          child: Form(
+            key: _formKey,
+            child: ListView(
+              padding: const EdgeInsets.all(16),
+              children: [
+                // Matric Number Card
+                _buildCard(
+                  title: 'Student Information',
+                  child: TextFormField(
+                    controller: _matricNumberController,
+                    decoration: _buildInputDecoration(
+                      'Matric Number',
+                      Icons.badge_rounded,
                     ),
-                    const SizedBox(height: 8),
-                    Row(
-                      children: [
-                        Expanded(
-                          child: TextField(
-                            controller: _reasonController,
-                            decoration: const InputDecoration(
-                              labelText: 'Add Reason',
-                              border: OutlineInputBorder(),
-                            ),
+                    validator: (value) =>
+                        value?.isEmpty ?? true ? 'Please enter matric number' : null,
+                  ),
+                ),
+                const SizedBox(height: 16),
+
+                // Date and Time Card
+                _buildCard(
+                  title: 'Visit Details',
+                  child: Column(
+                    children: [
+                      InkWell(
+                        onTap: () async {
+                          final date = await showDatePicker(
+                            context: context,
+                            initialDate: _selectedDate,
+                            firstDate: DateTime(2000),
+                            lastDate: DateTime.now(),
+                            builder: (context, child) {
+                              return Theme(
+                                data: Theme.of(context).copyWith(
+                                  colorScheme: ColorScheme.light(
+                                    primary: primaryColor,
+                                  ),
+                                ),
+                                child: child!,
+                              );
+                            },
+                          );
+                          if (date != null) {
+                            setState(() => _selectedDate = date);
+                          }
+                        },
+                        child: Container(
+                          padding: const EdgeInsets.all(16),
+                          decoration: BoxDecoration(
+                            border: Border.all(color: Colors.grey.shade300),
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          child: Row(
+                            children: [
+                              Icon(Icons.calendar_today, color: primaryColor),
+                              const SizedBox(width: 12),
+                              Text(
+                                DateFormat('EEEE, MMMM d, yyyy').format(_selectedDate),
+                                style: const TextStyle(fontSize: 16),
+                              ),
+                            ],
                           ),
                         ),
-                        IconButton(
-                          icon: const Icon(Icons.add),
-                          onPressed: () {
-                            if (_reasonController.text.isNotEmpty) {
-                              setState(() {
-                                _reasons.add(_reasonController.text);
-                                _reasonController.clear();
-                              });
-                            }
-                          },
+                      ),
+                      const SizedBox(height: 16),
+                      TextFormField(
+                        controller: _timeController,
+                        decoration: _buildInputDecoration(
+                          'Visit Time',
+                          Icons.access_time_rounded,
                         ),
-                      ],
-                    ),
-                    ..._reasons.map((reason) => ListTile(
-                          title: Text(reason),
-                          trailing: IconButton(
-                            icon: const Icon(Icons.remove),
+                        validator: (value) =>
+                            value?.isEmpty ?? true ? 'Please enter time' : null,
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 16),
+
+                // Reasons Card
+                _buildCard(
+                  title: 'Reasons for Visit',
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        children: [
+                          Expanded(
+                            child: TextFormField(
+                              controller: _reasonController,
+                              decoration: _buildInputDecoration(
+                                'Add Reason',
+                                Icons.description_rounded,
+                              ),
+                            ),
+                          ),
+                          const SizedBox(width: 8),
+                          IconButton(
+                            icon: Icon(Icons.add_circle, color: primaryColor),
                             onPressed: () {
-                              setState(() => _reasons.remove(reason));
+                              if (_reasonController.text.isNotEmpty) {
+                                setState(() {
+                                  _reasons.add(_reasonController.text);
+                                  _reasonController.clear();
+                                });
+                              }
                             },
                           ),
-                        )),
-                  ],
+                        ],
+                      ),
+                      const SizedBox(height: 16),
+                      Wrap(
+                        spacing: 8,
+                        runSpacing: 8,
+                        children: _reasons.map((reason) => _buildChip(
+                          reason,
+                          onDelete: () {
+                            setState(() => _reasons.remove(reason));
+                          },
+                        )).toList(),
+                      ),
+                    ],
+                  ),
                 ),
+                const SizedBox(height: 16),
+
+                // Medicines Card
+                _buildCard(
+                  title: 'Prescribed Medicines',
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      ElevatedButton.icon(
+                        onPressed: _addMedicine,
+                        icon: const Icon(Icons.add,color: Colors.white,),
+                        label: const Text('Add Medicine',style: TextStyle(color: Colors.white),),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: primaryColor,
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 16, vertical: 12),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 16),
+                      ..._medicines.map((medicine) => Card(
+                        elevation: 2,
+                        margin: const EdgeInsets.only(bottom: 8),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: ListTile(
+                          leading: CircleAvatar(
+                            backgroundColor: primaryColor,
+                            child: const Icon(Icons.medication_rounded, color: Colors.white),
+                          ),
+                          title: Text(
+                            medicine.name,
+                            style: const TextStyle(fontWeight: FontWeight.w600),
+                          ),
+                          subtitle: Text(
+                            'Dosage: ${medicine.dosage}\nFrequency: ${medicine.frequency}',
+                          ),
+                          trailing: IconButton(
+                            icon: Icon(Icons.delete_outline, color: primaryColor),
+                            onPressed: () {
+                              setState(() => _medicines.remove(medicine));
+                            },
+                          ),
+                        ),
+                      )),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildCard({required String title, required Widget child}) {
+    return Card(
+      elevation: 2,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(16),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              title,
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+                color: primaryColor,
               ),
             ),
             const SizedBox(height: 16),
-            // Medicines Section
-            Card(
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        const Text(
-                          'Medicines',
-                          style: TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        ElevatedButton.icon(
-                          onPressed: _addMedicine,
-                          icon: const Icon(Icons.add),
-                          label: const Text('Add Medicine'),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 8),
-                    ..._medicines.map((medicine) => Card(
-                          child: ListTile(
-                            title: Text(medicine.name),
-                            subtitle: Text(
-                              'Dosage: ${medicine.dosage}\nFrequency: ${medicine.frequency}',
-                            ),
-                            trailing: IconButton(
-                              icon: const Icon(Icons.delete),
-                              onPressed: () {
-                                setState(() => _medicines.remove(medicine));
-                              },
-                            ),
-                          ),
-                        )),
-                  ],
-                ),
-              ),
-            ),
+            child,
           ],
         ),
       ),
     );
   }
+
+  Widget _buildChip(String label, {required VoidCallback onDelete}) {
+    return Chip(
+      label: Text(label),
+      deleteIcon: const Icon(Icons.cancel, size: 18),
+      onDeleted: onDelete,
+      backgroundColor: primaryColor.withOpacity(0.1),
+      deleteIconColor: primaryColor,
+      labelStyle: TextStyle(color: primaryColor),
+      padding: const EdgeInsets.symmetric(horizontal: 8),
+      materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+    );
+  }
+
+  InputDecoration _buildInputDecoration(String label, IconData icon) {
+    return InputDecoration(
+      labelText: label,
+      prefixIcon: Icon(icon, color: primaryColor),
+      border: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(12),
+        borderSide: BorderSide(color: Colors.grey.shade300),
+      ),
+      enabledBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(12),
+        borderSide: BorderSide(color: Colors.grey.shade300),
+      ),
+      focusedBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(12),
+        borderSide: BorderSide(color: primaryColor),
+      ),
+      filled: true,
+      fillColor: Colors.white,
+      labelStyle: TextStyle(color: primaryColor.withOpacity(0.8)),
+    );
+  }
 }
+
