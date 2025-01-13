@@ -19,28 +19,30 @@ Sprint 1:
 <th> Home page of application
 <th><a href="lib/page/User_Home.dart">click me</a>
 <th> None
-  
 </tr>
 
 <tr>
 <th> 2
 <th> Interface.dart
 <th> Interface of application
-<th><a href="lib/page/interface.dart">click me</a>
+<th><a href="lib/page/Interface.dart">click me</a>
+<th> None
 </tr>
 
 <tr>
 <th> 3
-<th>Login.dart
+<th> Login.dart
 <th> Login page of application
 <th><a href="lib/page/login.dart">click me</a>
+<th><a href="lib/back-end/firebase_Login.dart">click me</a>
 </tr>
 
 <tr>
 <th> 4
-<th>Registration.dart
+<th> Registration.dart
 <th> Registration page of application
-<th><a href="lib/page/registration.dart">click me</a>
+<th><a href="lib/page/Registration.dart">click me</a>
+<th><a href="lib/back-end/firebase_Registration.dart">click me</a>
 </tr>
 </table>
 
@@ -51,28 +53,40 @@ Sprint 2:
 <th> No
 <th> Source code
 <th> Description
-<th> Location
+<th> Front-end
+<th> Back-end
 </tr>
 
 <tr>
 <th> 1
-<th> Home.dart
+<th> User_Home.dart
 <th> Main page of application
-<th><a href="lib/LinChongHuiSprint2/home.dart">click me</a>
+<th><a href="lib/page/User_Home.dart">click me</a>
+<th> None
 </tr>
 
 <tr>
 <th> 2
-<th> tabHome.dart
-<th> Home tab of application
-<th><a href="lib/LinChongHuiSprint2/tabHome.dart">click me</a>
+<th> Setting.dart
+<th> Setting tab of application
+<th><a href="lib/page/User_Setting.dart">click me</a>
+<th> None
 </tr>
 
 <tr>
 <th> 3
-<th> tabSetting.dart
-<th> Setting tab of application
-<th><a href="lib/LinChongHuiSprint2/tabSetting.dart">click me</a>
+<th> User_Profile.dart
+<th> User details
+<th><a href="lib/page/User_Profile.dart">click me</a>
+<th><a href="lib/back-end/firebase_Profile.dart">click me</a>
+</tr>
+
+<tr>
+<th> 4
+<th> Forgot_password.dart
+<th> Forgot Password page
+<th><a href="lib/page/Forgot_password.dart">click me</a>
+<th>None
 </tr>
 </table>
 
@@ -83,29 +97,34 @@ Sprint 3:
 <th> No
 <th> Source code
 <th> Description
-<th> Location
+<th> Front-end
+<th> Back-end
 </tr>
 
 <tr>
 <th> 1
-<th> Home.dart
-<th> Main page of application
-<th><a href="lib/LinChongHuiSprint2/home.dart">click me</a>
+<th> User_EditProfile.dart
+<th> Edit User Profile
+<th><a href="lib/page/User_EditProfile.dart">click me</a>
+<th><a href="lib/back-end/firebase_EditProfile.dart">click me</a>
 </tr>
 
 <tr>
 <th> 2
-<th> tabHome.dart
-<th> Home tab of application
-<th><a href="lib/LinChongHuiSprint2/tabHome.dart">click me</a>
+<th> Admin_UserManagement.dart
+<th> User Database Management 
+<th><a href="lib/page/Admin_UserManagement.dart">click me</a>
+<th><a href="lib/back-end/firebase_EditProfile.dart">click me</a>
 </tr>
 
 <tr>
 <th> 3
-<th> tabSetting.dart
-<th> Setting tab of application
-<th><a href="lib/LinChongHuiSprint2/tabSetting.dart">click me</a>
+<th> User_info_display.dart
+<th> Display User Details 
+<th><a href="lib/page/User_info_display.dart">click me</a>
+<th><a href="lib/page/User_info_display.dart">click me</a>
 </tr>
+
 </table>
 
 ### Member 2: Tay Shun Wei
@@ -116,32 +135,32 @@ Sprint 1:
 <th> No
 <th> Source code
 <th> Description
-<th> Location
-<th> back end code Location
+<th> Front-end
+<th> Back-end
 </tr>
 
 <tr>
 <th> 1
-<th> AppointmentPage.dart
+<th> User_BookingAppointment.dart
 <th> Appointment Page of application
-<th><a href="lib/Screen/AppointmentPage.dart">click me</a>
-<th><a href="lib/services(TayShunWei%5Cback%20end)/firebase_Appointmentpage.dart">click me</a>
+<th><a href="lib/page/User_BookingAppoitnment.dart">click me</a>
+<th><a href="lib/back-end/firebase_BookingAppointment.dart">click me</a>
 </tr>
 
 <tr>
 <th> 2
-<th> AvailableDatesPage.dart
+<th> User_AvailableDatesPage.dart
 <th> AvailableDates Page of application
-<th><a href="lib/Screen/AvailableDatesPage.dart">click me</a>
-<th><a href="lib/services(TayShunWei%5Cback%20end)/firebase_availableDates.dart">click me</a>
+<th><a href="lib/page/User_AvailabDate.dart">click me</a>
+<th><a href="lib/back-end/firebase_AvailableDate.dart">click me</a>
 </tr>
 
 <tr>
 <th> 3
 <th> ServiceListPage.dart
 <th> ServiceList Page of application
-<th><a href="lib/Screen/ServiceListPage.dart">click me</a>
-<th><a href="lib/services(TayShunWei%5Cback%20end)/firebase_service.dart">click me</a>
+<th><a href="lib/page/User_ServiceList.dart">click me</a>
+<th><a href="lib/back-end/firebase_ServiceList.dart">click me</a>
 </tr>
 </table>
 
@@ -152,16 +171,16 @@ Sprint 2:
 <th> No
 <th> Source code
 <th> Description
-<th> Location
-<th> back end code Location
+<th> Front-end
+<th> Back-end
 </tr>
 
 <tr>
 <th> 1
-<th> AppointmentList.dart
-<th> AppointmentList Page of application
-<th><a href="lib/Screen/AppointmentListScreen.dart">click me</a>
-<th><a href="lib/services(TayShunWei%5Cback%20end)/firebase_appointmentlist.dart">click me</a>
+<th> User_AppointmentList.dart
+<th> Appointment List of user application
+<th><a href="lib/page/User_AppointmentList.dart">click me</a>
+<th><a href="lib/back-end/firebase_AppointmentList.dart">click me</a>
 </tr>
 </table>
 
@@ -172,24 +191,24 @@ Sprint 3:
 <th> No
 <th> Source code
 <th> Description
-<th> Location
-<th> back end code Location
+<th> Front-end
+<th> Back-end
 </tr>
 
 <tr>
 <th> 1
-<th> LiveQueue(Admin).dart
+<th> Admin_LiveQueueManagement.dart
 <th> LiveQueue(Admin) Page of application
-<th><a href=https://github.com/LinChongHui/PKU-APPOINTMENT-SYSTEM/blob/main/lib/Screen/admin_screen.dart>click me</a>
-<th><a href=https://github.com/LinChongHui/PKU-APPOINTMENT-SYSTEM/blob/main/lib/services(TayShunWei%5Cback%20end)/firebase_update_queue(admin).dart>click me</a>
+<th><a href=lib/page/Admin_LiveQueueManagement.dart>click me</a>
+<th><a href=lib/back-end/firebase_AdminUpdateQueue.dart>click me</a>
 </tr>
 
 <tr>
 <th> 2
-<th> LiveQueue(User).dart
+<th> User_LiveQueueManagement.dart
 <th> LiveQueue(User) Page of application
-<th><a href=https://github.com/LinChongHui/PKU-APPOINTMENT-SYSTEM/blob/main/lib/Screen/user_screen.dart>click me</a>
-<th><a href=https://github.com/LinChongHui/PKU-APPOINTMENT-SYSTEM/blob/main/lib/services(TayShunWei%5Cback%20end)/firebase_userqueue_update.dart>click me</a>
+<th><a href=lib/page/User_LiveQueue_user.dart>click me</a>
+<th><a href=lib/back-end/firebase_UserLiveQueue.dart>click me</a>
 </tr>
 
 </table>
@@ -202,37 +221,27 @@ Sprint 1:
 <th> No
 <th> Source code
 <th> Description
-<th> Location
+<th> Front-end
+<th> Back-end
 </tr>
 
 <tr>
 <th> 1
-<th> admin_health_reports_screen.dart
+<th> Admin_HealthReportManagement.dart
 <th> Admin Health Reports Page of Application
-<th><a href="lib/Screen/admin_health_reports_screen.dart">click me</a>
+<th><a href="lib/page/Admin_HealthReportManagement.dart">click me</a>
+<th><a href="lib/back-end/firebase_HealthReport.dart">click me</a>
 </tr>
 
 
 <tr>
 <th> 2
-<th> user_health_report_screen.dart
+<th> User_HealthReport.dartt
 <th> User Health Reports Page of Application
-<th><a href="lib/Screen/user_health_report_screen.dart">click me</a>
+<th><a href="lib/page/User_HealthReport.dart">click me</a>
+<th><a href="lib/back-end/firebase_HealthReport.dart">click me</a>
 </tr>
 
-<tr>
-<th> 3
-<th> health_report_model.dart
-<th> Health Reports Page of Application
-<th><a href="lib/Screen/health_report_model.dart">click me</a>
-</tr>
-
-<tr>
-<th> 4
-<th> firebase_options.dart
-<th> Backend of health report
-<th><a href="lib/HealthReport(AeronBackEnd)/firebaseoptions.dart">click me</a>
-</tr>
 </table>
 
 Sprint 2:
@@ -242,14 +251,16 @@ Sprint 2:
 <th> No
 <th> Source code
 <th> Description
-<th> Location
+<th> Front-end
+<th> Back-end
 </tr>
 
 <tr>
 <th> 1
-<th> health_analytics.dart
+<th> User_HealthAnalytics.dart
 <th> Health Analytics Page of Application
-<th><a href="lib/HealthReport(AeronBackEnd)/health_analytics.dart">click me</a>
+<th><a href="lib/page/User_HealthAnalytics.dart">click me</a>
+<th><a href="lib/back-end/firebase_HealthAnalytics.dart">click me</a>
 </tr>
 </table>
 
@@ -260,29 +271,26 @@ Sprint 3:
 <th> No
 <th> Source code
 <th> Description
-<th> Location
+<th> Front-end
+<th> Back-end
 </tr>
 
 <tr>
 <th> 1
-<th> Home.dart
-<th> Main page of application
-<th><a href="lib/LinChongHuiSprint2/home.dart">click me</a>
+<th> User_MedicalRecord.dart
+<th> Medical Record of user application
+<th><a href="lib/page/User_MedicalRecord.dart">click me</a>
+<th><a href="lib/back-end/firebase_MedicalRecord.dart">click me</a>
 </tr>
 
 <tr>
 <th> 2
-<th> tabHome.dart
-<th> Home tab of application
-<th><a href="lib/LinChongHuiSprint2/tabHome.dart">click me</a>
+<th> Admin_EditMedicalRecord.dart
+<th> Edit Medical Record of admin application
+<th><a href="lib/page/Admin_EditMedicalRecord.dart">click me</a>
+<th><a href="lib/back-end/firebase_MedicalRecord.dart">click me</a>
 </tr>
 
-<tr>
-<th> 3
-<th> tabSetting.dart
-<th> Setting tab of application
-<th><a href="lib/LinChongHuiSprint2/tabSetting.dart">click me</a>
-</tr>
 </table>
 
 ### Member 4: Liow Chee Suan
@@ -293,16 +301,16 @@ Sprint 1:
 <th> No
 <th> Source code
 <th> Description
-<th> Location
-<th> back end code Location
+<th> Front-end
+<th> Back-end
 </tr>
 
 <tr>
 <th> 1
 <th> emergency_call.dart
-<th> An right corner call button 
-<th><a href="lib/Screen/emergency_call.dart">click me</a>
-<th><a href="lib/BackEnd/firebase_readPhoneNum.dart">click me</a>
+<th> An right corner call button (combine and start from line 154)
+<th><a href="lib/page/User_Home.dart">click me</a>
+<th><a href="lib/back-end/firebase_ReadNumber.dart">click me</a>
 </tr>
 </table>
 
@@ -312,22 +320,18 @@ Sprint 2:
 <th> No
 <th> Source code
 <th> Description
-<th> Location
+<th> Front-end
+<th> Back-end
 </tr>
 
 <tr>
 <th> 1
-<th> route_finder_map.dart
+<th> User_LocationDistress.dart
 <th> Page to show map and calculate the path
-<th><a href="lib/route_finder_map.dart">click me</a>
+<th><a href="lib/page/User_LocationDistress.dart">click me</a>
+<th><a href="lib/back-end/firebase_RouteService.dart">click me</a>
 </tr>
 
-<tr>
-<th> 2
-<th> route_service.dart
-<th> To grand the permission of location
-<th><a href="lib/route_service.dart">click me</a>
-</tr>
 </table>
 
 Sprint 3:
@@ -337,27 +341,16 @@ Sprint 3:
 <th> No
 <th> Source code
 <th> Description
-<th> Location
+<th> Front-end
+<th> Back-end
 </tr>
 
 <tr>
 <th> 1
-<th> Home.dart
-<th> Main page of application
-<th><a href="lib/LinChongHuiSprint2/home.dart">click me</a>
+<th> Admin_LocationDistress.dart
+<th> To grand the permission of location
+<th><a href="lib/page/Admin_LocationDistress.dart">click me</a>
+<th><a href="lib/back-end/firebase_RouteService.dart">click me</a>
 </tr>
 
-<tr>
-<th> 2
-<th> tabHome.dart
-<th> Home tab of application
-<th><a href="lib/LinChongHuiSprint2/tabHome.dart">click me</a>
-</tr>
-
-<tr>
-<th> 3
-<th> tabSetting.dart
-<th> Setting tab of application
-<th><a href="lib/LinChongHuiSprint2/tabSetting.dart">click me</a>
-</tr>
 </table>
