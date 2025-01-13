@@ -179,6 +179,9 @@ class _AddEditRecordFormState extends State<AddEditRecordForm> {
                 tooltip: 'Save Record',
               ),
           ],
+           iconTheme: const IconThemeData(
+            color: Colors.white, // Change the back arrow color to white
+          ),
         ),
         body: Container(
           decoration: BoxDecoration(

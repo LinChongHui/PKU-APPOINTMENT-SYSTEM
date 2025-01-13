@@ -4,13 +4,15 @@ import 'package:intl/intl.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:user_profile_management/back-end/firebase_MedicalRecord.dart';
 import 'package:user_profile_management/page/Admin_EditMedicalRecord.dart';
+import 'Widget_inside_appbar_backarrow.dart';
 
 class UserRecordsView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('My Medical Records'),
+      appBar: const PreferredSize(
+        preferredSize: Size.fromHeight(kToolbarHeight),
+        child: AppBarAndBackArrow(title: 'Medical Record'),
       ),
       body: FutureBuilder<DocumentSnapshot>(
         future: FirebaseFirestore.instance.collection('users').doc(FirebaseAuth.instance.currentUser!.uid).get(),

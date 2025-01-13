@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:intl/intl.dart';
 import 'package:user_profile_management/back-end/firebase_HealthReport.dart';
+import 'package:user_profile_management/page/Theme.dart';
 
 class AdminHealthReportsScreen extends StatelessWidget {
   const AdminHealthReportsScreen({super.key});
@@ -11,16 +12,19 @@ class AdminHealthReportsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Health Reports Admin'),
+        title: const Text('Health Reports Admin',style: TextStyle(color: fivethcolour),),
         backgroundColor: const Color(0xFF00897B),
         actions: [
           IconButton(
-            icon: const Icon(Icons.refresh),
+            icon: const Icon(Icons.refresh,color: fivethcolour,),
             onPressed: () {
               FirebaseFirestore.instance.collection('health_reports').get();
             },
           ),
         ],
+         iconTheme: const IconThemeData(
+        color: Colors.white, // Change the back arrow color to white
+          ),
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () => _showAddReportDialog(context),

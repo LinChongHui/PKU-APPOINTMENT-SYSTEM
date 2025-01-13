@@ -3,6 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:intl/intl.dart';
 import 'package:user_profile_management/back-end/firebase_HealthReport.dart';
+import 'Widget_inside_appbar_backarrow.dart';
 
 class UserMedicalrecord extends StatelessWidget {
   const UserMedicalrecord({super.key});
@@ -10,9 +11,9 @@ class UserMedicalrecord extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Health Report'),
-        backgroundColor: Colors.teal,
+       appBar: const PreferredSize(
+        preferredSize: Size.fromHeight(kToolbarHeight),
+        child: AppBarAndBackArrow(title: 'Health Record'),
       ),
       body: _buildReportsList(),
     );
