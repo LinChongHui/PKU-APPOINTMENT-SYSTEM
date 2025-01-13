@@ -9,14 +9,17 @@ Sprint 1:
 <th> No
 <th> Source code
 <th> Description
-<th> Location
+<th> Front-end
+<th> Back-end
 </tr>
 
 <tr>
 <th> 1
 <th> Home.dart
 <th> Home page of application
-<th><a href="lib/page/home.dart">click me</a>
+<th><a href="lib/page/User_Home.dart">click me</a>
+<the> None
+  
 </tr>
 
 <tr>
